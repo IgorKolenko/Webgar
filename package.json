@@ -4,14 +4,17 @@
   "description": "Web aplikacija za automatsku provjeru javascript, html i css datoteka",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "buildServer": "node server.js"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.36",
-    "@fortawesome/free-solid-svg-icons": "^5.15.4",
-    "@fortawesome/react-fontawesome": "^0.1.16",
-    "react": "^17.0.2"
+    "express": "^4.17.1",
+    "pg": "^8.7.1"
+  },
+  "devDependencies": {
+    "express-validator": "^6.13.0",
+    "nodemon": "^2.0.14"
   }
 }
