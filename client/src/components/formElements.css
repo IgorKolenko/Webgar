@@ -1,0 +1,113 @@
+@import url('https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@400;700&family=PT+Sans:wght@400;700&display=swap');
+
+label{
+    font-family: 'PT Sans', sans-serif;
+    font-weight: 400;
+    font-size: 24px;
+}
+
+table{
+    background-color: white;
+    width: 100%;
+    font-family: 'PT Sans', sans-serif;
+    font-weight: 400;
+    font-size: 24px;
+}
+
+th{
+    padding: 10px;
+}
+
+.titleTr{
+    background-color: lightgray;
+}
+
+.formElement{
+    margin: 10px;
+    text-align: start;
+    display: flex;
+    flex-direction: column;
+}
+
+.buttonField{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.delBtn{
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    text-decoration: none;
+    border: 0;
+    background-color: #E05D5D;
+    color: white;
+    transition: 0.2s;
+}
+
+.delBtn:hover{
+    background-color: #e82020;
+}
+
+.editBtn{
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    text-decoration: none;
+    border: 0;
+    background-color: #348CEB;
+    color: white;
+    transition: 0.2s;
+}
+
+.editBtn:hover{
+    background-color: #344feb;
+}
+
+.formBtnContainer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.formBtnContaine2{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.customTextbox{
+    width: 60%;
+    height: 35px;
+    border-radius: 5px;
+    margin-top: 10px;
+    border: 2px solid black;
+}
+
+.customTextarea{
+    width: 60%;
+    height: 100px;
+    border-radius: 5px;
+    margin-top: 10px;
+    border: 2px solid black;
+}
+
+@media only screen and (max-width: 700px){
+    .customTextarea{
+        width: 100%;
+    }
+
+    .customTextbox{
+        width: 100%;
+    }
+
+    table{
+        font-size: 18px;
+    }
+
+    th{
+        padding: 5px;
+    }
+}
+
