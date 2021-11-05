@@ -4,7 +4,7 @@ const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
     database: 'projektR',
-    password: 'ferbp',
+    password: "bayepodataka",
     port: 5432,
 });
 
@@ -17,5 +17,6 @@ module.exports = {
                 console.log('executed query', {text, params, duration, rows: res.rows});
                 return res;
             });
-    }
+    },
+    pool: pool
 }
