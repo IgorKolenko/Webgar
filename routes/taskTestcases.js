@@ -19,9 +19,9 @@ router.post('/addTask',async function (req,res,next){
         // console.log(JSON.parse(testcase))
         //Body ima vrstaTestCase,imeTestCase,imeFunkcije,input,output
         console.log("Spremanje u bazu testcase: "+testcase.imeTestCase);
-        let testCaseJSON=JSON.stringify({funcName: testcase.JSON.imeFunkcije, input: testcase.JSON.input, output: testcase.JSON.output})
+        //let testCaseJSON=JSON.stringify({funcName: testcase.JSON.imeFunkcije, input: testcase.JSON.input, output: testcase.JSON.output})
         await db.query(`INSERT INTO testcase (imeTestCase,JSON,vrstaTestCase,idZadatak)
-                            VALUES ('${testcase.imeTestCase}','${testCaseJSON}','${testcase.vrstaTestCase}',${res.rows[0].idzadatak})`);
+                            VALUES ('${testcase.imeTestCase}','${JSON.stringify(testcase.JSON)}','${testcase.vrstaTestCase}',${res.rows[0].idzadatak})`);
     })
 });
 

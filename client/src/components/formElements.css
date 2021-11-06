@@ -77,6 +77,12 @@ th{
     justify-content: center;
 }
 
+.verticalBtnContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
 .customTextbox{
     width: 60%;
     height: 35px;
@@ -90,6 +96,12 @@ th{
     height: 100px;
     border-radius: 5px;
     margin-top: 10px;
+    border: 2px solid black;
+}
+
+.customCheckbox{
+    width: 30px;
+    height: 30px;
     border: 2px solid black;
 }
 

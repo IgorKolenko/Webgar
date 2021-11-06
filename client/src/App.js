@@ -1,7 +1,7 @@
 import logo from './logo.svg';
 import './App.css';
 import NoviJsZad from './components/noviJsZad/noviJsZad';
-import JsTestcase from './components/jsTestcase/jsTestcase';
+import NoviHtmlZad from './components/noviHtmlZad/noviHtmlZad';
 import {
   BrowserRouter as Router,
   Switch,
@@ -16,6 +16,7 @@ function App() {
       <div className="App">
         <Switch>
           <Route path="/noviJsZad" exact component={NoviJsZad} />
+          <Route path="/noviHtmlZad" exact component={NoviHtmlZad} />
         </Switch>
       </div>
     </Router>
