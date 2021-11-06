@@ -4,7 +4,6 @@ import '../formElements.css';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faTrash} from '@fortawesome/free-solid-svg-icons';
 import {faPen} from '@fortawesome/free-solid-svg-icons';
-import JsTestcase from '../jsTestcase/jsTestcase';
 
 class NoviHtmlZad extends React.Component{
     //konstruktor za NoviJsZad
