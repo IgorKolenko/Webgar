@@ -17,6 +17,7 @@ app.use(session({
 app.use(express.static('client/build'));
 //Routes
 app.use('/tasks',require('./routes/taskTestcases'))
+app.use('/css', require('./routes/cssTesting'))
 
 //Ovo je za React rute
 app.get('*', function(req, res){
