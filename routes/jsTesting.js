@@ -4,7 +4,6 @@ const db = require('../db');
 const fs = require('fs');
 
 var evaluator=require('eval');
-const {raw} = require("express");
 
 router.get('/jsTesting',function (req,res,next){
     // Mock testcase
@@ -23,8 +22,10 @@ router.get('/jsTesting',function (req,res,next){
             console.error(err)
             return
         }
-        console.log(data)
+        // File data
         let fjaTest=data
+        // console.log(data)
+
         // Check input for Numbers
         var rawInput=testcase.input.split(',')
         rawInput.forEach(function(element,i){
@@ -34,19 +35,25 @@ router.get('/jsTesting',function (req,res,next){
         })
 
         // Find function declaration
-        let fIndex=fjaTest.search("function "+testcase.imeFunkcije);
+        var regex= new RegExp("function\\s+"+testcase.imeFunkcije+"\\s*\\(")
+        let fIndex=fjaTest.search(regex);
+        // console.log(fIndex)
         // Add module.exports to start
-        let formattedFunction=fjaTest.slice(0,fIndex)+" module.exports = "+fjaTest.slice(fIndex)
+        if(fIndex!==-1) {
+            let formattedFunction = fjaTest.slice(0, fIndex) + " module.exports = " + fjaTest.slice(fIndex)
 
+            // Get Function result
+            var result = evaluator(formattedFunction)(...rawInput)
+            // console.log(result)
 
-        // Get Function result
-        var result=evaluator(formattedFunction)(...rawInput)
-        console.log(result)
-
-        if (result==testcase.output){
-            console.log("SUCCESS")
+            // Test Result
+            if (result == testcase.output) {
+                console.log("SUCCESS")
+            } else {
+                console.log("FAIL")
+            }
         }else{
-            console.log("FAIL")
+            console.log("Can't find function")
         }
     })
 
