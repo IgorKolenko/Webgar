@@ -4,22 +4,34 @@ const fs = require('fs');
 const jsdom = require("jsdom");
 
 router.get('/htmlTesting', function(req, res, next){
+    // let testcaseSvojstava = {
+    //     imeElementa: ".testClass",
+    //     svojstva: "id='testId' title='testTitle'",
+    //     checkbox: false
+    // };
+
+    // let testcaseStrukture = {
+    //     imeRoditelja: "div",
+    //     imeDjeteta: "span",
+    //     brPojavljivanja: 2
+    // };
+
     let testcaseSvojstava = {
-        imeElementa: ".testClass",
-        svojstva: "id='testId' title='testTitle'",
+        imeElementa: ".dropdown-menu",
+        svojstva: "role='menu'",
         checkbox: false
     };
 
     let testcaseStrukture = {
-        imeRoditelja: "div",
+        imeRoditelja: "button",
         imeDjeteta: "span",
-        brPojavljivanja: 2
+        brPojavljivanja: 4
     };
 
     let prolazSvojstava = false
     let prolazStrukture = false
 
-    fs.readFile('../projektrtim3/routes/test.html', 'utf8', (err, data) => {
+    fs.readFile('../projektrtim3/routes/testFER.html', 'utf8', (err, data) => {
         if(err){
             console.log("Error: " + err);
         } else {
