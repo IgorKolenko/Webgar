@@ -3,93 +3,77 @@ var router = express.Router();
 const db = require('../db');
 const fs = require('fs');
 
-var evaluator=require('eval');
+var evaluator = require('eval');
 
-router.get('/jsTesting',function (req,res,next){
-    // Mock testcase
-    let testcase = {
-        imeFunkcije: "f1",
-        input:"1,2",
-        output: "3"
-    };
-
-    //TODO Check incorrect function name
-
-
-    // Check file
-    fs.readFile('../ProjektR/routes/test.js','utf8',(err,data)=>{
-        if (err) {
-            console.error(err)
-            return
-        }
-        // File data
-        let fjaTest=data
-        // console.log(data)
-
-        // Check input for Numbers
-        var rawInput=testcase.input.split(',')
-        rawInput.forEach(function(element,i){
-            if(!isNaN(element)){
-                rawInput[i]=Number(element)
-            }
-        })
-
-        // Find function declaration
-        var regex= new RegExp("function\\s+"+testcase.imeFunkcije+"\\s*\\(")
-        let fIndex=fjaTest.search(regex);
-        // console.log(fIndex)
-        // Add module.exports to start
-        if(fIndex!==-1) {
-            let formattedFunction = fjaTest.slice(0, fIndex) + " module.exports = " + fjaTest.slice(fIndex)
-
-            // Get Function result
-            var result = evaluator(formattedFunction)(...rawInput)
-            // console.log(result)
-
-            // Test Result
-            if (result == testcase.output) {
-                console.log("SUCCESS")
-            } else {
-                console.log("FAIL")
-            }
-        }else{
-            console.log("Can't find function")
+async function testFunction(testcase, taskSolution){
+    //Format testcase data
+    let testcaseData=JSON.parse(testcase.json)
+    // Check input for Numbers
+    let rawInput = testcaseData.input.split(',')
+    rawInput.forEach(function (element, i) {
+        if (!isNaN(element)) {
+            rawInput[i] = Number(element)
         }
     })
 
+    // Get file function from taskSolution
+    let functionText=taskSolution.file
 
-    // Check String
-    // Mock function
-    // let fjaTest="function f1(p1,p2){\n" +
-    //     "p3=p1+p2;\n" +
-    //     "return p3;\n" +
-    //     "}"
+    // Find function declaration
+    var regex = new RegExp("function\\s+" + testcaseData.imeFunkcije + "\\s*\\(")
+    let fIndex = functionText.search(regex);
 
-    // // Check input for Numbers
-    // var rawInput=testcase.input.split(',')
-    // rawInput.forEach(function(element,i){
-    //     if(!isNaN(element)){
-    //         rawInput[i]=Number(element)
-    //     }
+    // Add module.exports to start
+    if (fIndex !== -1) {
+        let formattedFunction = functionText.slice(0, fIndex) + " module.exports = " + functionText.slice(fIndex)
+
+        // Get Function result
+        var result = evaluator(formattedFunction)(...rawInput)
+        // console.log(result)
+
+        // Test Result
+        if (result == testcaseData.output) {
+            // Rezultat ispravan
+            await db.insertResult(1, testcase.idtestcase,taskSolution.idriješenizadatak)
+            console.log("SUCCESS")
+        } else {
+            //Rezultat neispravan
+            await db.insertResult(0,testcase.idtestcase,taskSolution.idriješenizadatak)
+            console.log("FAIL")
+        }
+    } else {
+        // Nije se nasla funkcija → rezultat neispravan
+        await db.insertResult(0, testcase.idtestcase,taskSolution.idriješenizadatak)
+        console.log("FAIL")
+    }
+}
+
+
+router.get('/jsTesting', async function (req, res, next) {
+    // Mock testcase
+    // let testcase = {
+    //     imeFunkcije: "f1",
+    //     input:"1,2",
+    //     output: "3"
+    // };
+    //TODO Hardcoded zadatak id
+    let allTestcases=await db.getTestcase(1)
+
+    //TODO Hardcoded idrijesenzadatak
+    let taskSolution=await db.getSolution(2)
+    // console.log(taskSolution.file)
+
+    for(let item of allTestcases){
+        // console.log(item)
+        await testFunction(item,taskSolution)
+    }
+    // allTestcases.forEach(item=>{
+    //     let testcase=JSON.parse(item.json)
+    //     testFunction(testcase,taskSolution)
     // })
-    //
-    // // Find function declaration
-    // let fIndex=fjaTest.search("function "+testcase.imeFunkcije);
-    // // Add module.exports to start
-    // let formattedFunction=fjaTest.slice(0,fIndex)+" module.exports = "+fjaTest.slice(fIndex)
-    //
-    //
-    // // Get Function result
-    // var result=evaluator(formattedFunction)(...rawInput)
-    // console.log(result)
-    //
-    // if (result==testcase.output){
-    //     console.log("SUCCESS")
-    // }else{
-    //     console.log("FAIL")
-    // }
 
-    res.json({ok:true});
+
+    res.json({ok: true});
 });
 
-module.exports= router
+module.exports = router
