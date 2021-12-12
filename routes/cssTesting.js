@@ -3,14 +3,13 @@ var router = express.Router();
 const db = require('../db');
 const fs = require('fs');
 
-router.get('/cssTesting', function(req, res, next){
-    let testcase = {
-        imeElementa: ".testClass",
-        svojstva:"background-color: green;border: 5px solid red;margin: 20px;padding: 10px;",
-        checkbox: false
-    };
-
-    fs.readFile('/mnt/d/web projekti/webgar/routes/test.css', 'utf8', (err, data) => {
+router.get('/cssTesting', async function(req, res, next){
+    console.log("Entering css testing");
+    let idzadatak = 1;
+    let testcases = await db.query("SELECT * FROM testcase WHERE idzadatak=$1", [idzadatak]);
+    testcases = testcases.rows;
+    console.log("Testcases: "+JSON.stringify(testcases));
+    fs.readFile('/mnt/d/web projekti/webgar/routes/test.css', 'utf8', async (err, data) => {
         if(err){
             console.log("Error: "+err);
         }else{
@@ -65,55 +64,87 @@ router.get('/cssTesting', function(req, res, next){
             console.log(propArr);
             console.log(output);
 
-            //parsiranje svojstva iz testcase-a
-            let svojstva = {}
-            let status = "propName";
-            propName = "";
-            propVal = "";
-            for(let i = 0; i < testcase.svojstva.length; i++){
-                if(status == "propName"){
-                    if(testcase.svojstva[i] == ':'){
-                        status = "propVal";
-                    }else if(testcase.svojstva[i] != '}'){
-                        propName += testcase.svojstva[i];
-                    }
-                }else{
-                    if(testcase.svojstva[i] == ';'){
-                        propVal = propVal.trim();
-                        svojstva[propName] = propVal;
-                        propName = "";
-                        propVal = "";
-                        status = "propName";
+            let resultsArr = [];
+
+            //prolaženje kroz sve testcase-ove
+            for(var testcase of testcases){
+                let testcaseJson = JSON.parse(testcase.json);
+                testcaseJson.svojstva = testcaseJson.svojstva.replace((/  |\r\n|\n|\r/gm),"");
+                console.log("Json: "+testcaseJson.svojstva);
+
+                //parsiranje svojstva iz testcase-a
+                let svojstva = {}
+                let status = "propName";
+                propName = "";
+                propVal = "";
+                for(let i = 0; i < testcaseJson.svojstva.length; i++){
+                    if(status == "propName"){
+                        if(testcaseJson.svojstva[i] == ':'){
+                            status = "propVal";
+                        }else if(testcaseJson.svojstva[i] != '}'){
+                            propName += testcaseJson.svojstva[i];
+                        }
                     }else{
-                        propVal += testcase.svojstva[i];
+                        if(testcaseJson.svojstva[i] == ';'){
+                            propVal = propVal.trim();
+                            svojstva[propName] = propVal;
+                            propName = "";
+                            propVal = "";
+                            status = "propName";
+                        }else{
+                            propVal += testcaseJson.svojstva[i];
+                        }
                     }
+                }
+
+                //testiranje pomocu testcase-a
+                var bool = true;
+                if(testcaseJson.imeElementa in output){
+                    let brSvojstva = 0
+                    for (const [key, value] of Object.entries(svojstva)) {
+                        brSvojstva++;
+                        if(!(key in output[testcaseJson.imeElementa] && value == output[testcaseJson.imeElementa][key])){
+                            bool = false;
+                            break;
+                        }
+                    }
+                    if(testcaseJson.checkbox && bool == true){
+                        if(Object.keys(output[testcaseJson.imeElementa]).length == brSvojstva){
+                            bool = true;
+                        }else{
+                            bool = false;
+                        }
+                    }
+                    resultsArr.push([testcase.idtestcase, bool]);
+                }else{
+                    resultsArr.push([testcase.idtestcase, false]);
                 }
             }
 
-            //testiranje pomocu testcase-a
-            if(testcase.imeElementa in output){
-                let brSvojstva = 0
-                for (const [key, value] of Object.entries(svojstva)) {
-                    brSvojstva++;
-                    if(!(key in output[testcase.imeElementa] && value == output[testcase.imeElementa][key])){
-                        res.send("False");
-                        return;
-                    }
+            let idrijesenizadatak = await db.query("INSERT INTO riješenizadatak (file, uploaddate, jmbag, idzadatak) VALUES ($1, $2, '0036123456', $3) RETURNING idriješenizadatak", [data, new Date(), idzadatak])
+            idrijesenizadatak = idrijesenizadatak.rows[0]["idriješenizadatak"];
+            console.log(resultsArr);
+            console.log(idrijesenizadatak);
+            for(let rez of resultsArr){
+                console.log("Rezultat: "+rez[1]);
+                if(rez[1]){
+                    await db.query("INSERT INTO rezultat (prolaz, idtestcase, idriješenizadatak) VALUES ($1, $2, $3)", [1, parseInt(rez[0]), parseInt(idrijesenizadatak)]);
+                }else{
+                    await db.query("INSERT INTO rezultat (prolaz, idtestcase, idriješenizadatak) VALUES ($1, $2, $3)", [0, parseInt(rez[0]), parseInt(idrijesenizadatak)]);
                 }
-                if(testcase.checkbox){
-                    if(Object.keys(output[testcase.imeElementa]).length == brSvojstva){
-                        res.send("True");
-                        return;
-                    }else{
-                        res.send("False");
-                        return;
-                    }
-                }
-                res.send("True");
-                return
             }
+
+            res.send(resultsArr);
+
         }
-    })
+    });
+    /*
+    let testcase = {
+        imeElementa: ".testClass",
+        svojstva:"background-color: green;border: 5px solid red;margin: 20px;padding: 10px;",
+        checkbox: false
+    };
+    */
 });
 
 module.exports = router;
