@@ -4,7 +4,7 @@ const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
     database: 'projektR',
-    password: "ferbp",
+    password: "bazepodataka",
     port: 5432,
 });
 
@@ -33,6 +33,14 @@ async function getSolution(idRijesenZadatak){
     return res
 }
 
+async function getLastSolution(idzadatak){
+    let res=await pool.query('SELECT * FROM riješenizadatak WHERE idzadatak=$1 ORDER BY uploaddate DESC LIMIT 1',[idzadatak]).then(
+        value=>{return value.rows[0]}
+    ).catch(err=>console.log(err))
+
+    return res
+}
+
 async function insertResult(testResult, idTestcase, idRijeseniZadatak){
     await pool.query('INSERT INTO rezultat (prolaz, idtestcase, idriješenizadatak) VALUES ($1,$2,$3)',
         [testResult, idTestcase,idRijeseniZadatak,]).catch(
@@ -53,5 +61,6 @@ module.exports = {
     pool: pool,
     getTestcase,
     getSolution,
-    insertResult
+    insertResult,
+    getLastSolution
 }
