@@ -1,98 +1,84 @@
 var express = require('express');
 var router = express.Router();
-const fs = require('fs');
+const db = require('../db');
 const jsdom = require("jsdom");
 
-router.get('/htmlTesting', function(req, res, next){
-    // let testcaseSvojstava = {
-    //     imeElementa: ".testClass",
-    //     svojstva: "id='testId' title='testTitle'",
-    //     checkbox: false
-    // };
+function test(testcase, taskSolution) {
+    let data = taskSolution.file
+    const dom = new jsdom.JSDOM(data)
+    const doc = dom.window.document
+    let testcaseJSON = JSON.parse(testcase.json)
+    let prolaz = false;
 
-    // let testcaseStrukture = {
-    //     imeRoditelja: "div",
-    //     imeDjeteta: "span",
-    //     brPojavljivanja: 2
-    // };
+    if(testcase.vrstatestcase == "htmlStrukture") {
+        let parents = doc.querySelectorAll(testcaseJSON.imeRoditelja)
+        let selector = ":scope >" + testcaseJSON.imeDjeteta
 
-    let testcaseSvojstava = {
-        imeElementa: ".dropdown-menu",
-        svojstva: "role='menu'",
-        checkbox: false
-    };
-
-    let testcaseStrukture = {
-        imeRoditelja: "button",
-        imeDjeteta: "span",
-        brPojavljivanja: 4
-    };
-
-    let prolazSvojstava = false
-    let prolazStrukture = false
-
-    fs.readFile('../projektrtim3/routes/testFER.html', 'utf8', (err, data) => {
-        if(err){
-            console.log("Error: " + err);
-        } else {
-            const dom = new jsdom.JSDOM(data)
-            const doc = dom.window.document
-
-            // testcase svojstava
-            let elements = doc.querySelectorAll(testcaseSvojstava.imeElementa)
-            let array = testcaseSvojstava.svojstva.split(" ").map(x => [x.split("=")[0], x.split("=")[1].replaceAll("'", "")])
-            let map = new Map(array)
-
-            // sadrži li sva potrebna svojstva
-            for(const element of elements) {
-                //console.log(element.attributes.length)
-                for(const [key, value] of map.entries()) {
-                    let attr = element.attributes.getNamedItem(key)
-                    if(attr != null && attr.value == value) {
-                        prolazSvojstava = true
-                    } else {
-                        prolazSvojstava = false
-                        break
-                    }
-                }
-
-                if(prolazSvojstava) {
-                    // sadrži li SAMO navedena svojstva (+1 za klasu ili id pomoću čega smo našli element)
-                    if(testcaseSvojstava.checkbox == true && element.attributes.length > map.size + 1) {
-                        prolazSvojstava = false
-                    } else {
-                        break
-                    }
-                } 
-            }
-
-
-            // testcase strukture
-            let parents = doc.querySelectorAll(testcaseStrukture.imeRoditelja)
-            let selector = ":scope >" + testcaseStrukture.imeDjeteta
-
-            for(const parent of parents) {
-                let count = parent.querySelectorAll(selector).length
-                //console.log(count)
+        for(const parent of parents) {
+            let count = parent.querySelectorAll(selector).length
+            //console.log(count)
     
-                if(count == testcaseStrukture.brPojavljivanja) {
-                    prolazStrukture = true
+            if(count == testcaseJSON.brPojavljivanja) {
+                prolaz = true
+                break
+            }
+        }
+
+        return prolaz
+
+    } else if(testcase.vrstatestcase == "htmlSvojstva") {
+        let elements = doc.querySelectorAll(testcaseJSON.imeElementa)
+        let array = testcaseJSON.svojstva.split("\n").map(x => [x.split("=")[0], x.split("=")[1]])
+        let map = new Map(array)
+
+        // sadrži li sva potrebna svojstva
+        for(const element of elements) {
+            //console.log(element.attributes.length)
+            for(const [key, value] of map.entries()) {
+                let attr = element.attributes.getNamedItem(key)
+                if(attr != null && attr.value == value) {
+                    prolaz = true
+                } else {
+                    prolaz = false
                     break
                 }
             }
 
-
-             // jesu li prošla oba testcase-a
-            console.log(prolazSvojstava)
-            console.log(prolazStrukture)
-
-             if(prolazSvojstava && prolazStrukture) {
-                 res.send("True")
-             } else {
-                 res.send("False")
-             }
+            if(prolaz) {
+                // sadrži li SAMO navedena svojstva (+1 za klasu ili id pomoću čega smo našli element)
+                if(testcaseJSON.checkbox == true && element.attributes.length > map.size + 1) {
+                    prolaz = false
+                } else {
+                    break
+                }
+            } 
         }
-    })
+
+        return prolaz
+    }
+}
+
+router.get('/htmlTesting', async function(req, res, next){
+    //hardcoded idZadatak
+    let idZadatak = 2
+    let testcases = await db.getTestcase(idZadatak)
+    //console.log(testcases)
+    let taskSolution = await db.getLastSolution(idZadatak)
+    //console.log(taskSolution.file)
+
+    for(let testcase of testcases) {
+        let prolaz = test(testcase, taskSolution)
+
+        if(prolaz) {
+            await db.insertResult(1, testcase.idtestcase, taskSolution.idriješenizadatak)
+            console.log("SUCCESS")
+        } else {
+            await db.insertResult(0, testcase.idtestcase, taskSolution.idriješenizadatak)
+            console.log("FAIL")
+        }
+    }
+
+    res.send("DONE")
 });
 
 module.exports= router
