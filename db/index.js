@@ -33,8 +33,8 @@ async function getSolution(idRijesenZadatak){
     return res
 }
 
-async function getLastSolution(idzadatak){
-    let res=await pool.query('SELECT * FROM riješenizadatak WHERE idzadatak=$1 ORDER BY uploaddate DESC LIMIT 1',[idzadatak]).then(
+async function getLastSolution(idzadatak, jmbag){
+    let res=await pool.query('SELECT * FROM riješenizadatak WHERE idzadatak=$1 AND jmbag=$2 ORDER BY uploaddate DESC LIMIT 1',[idzadatak, jmbag]).then(
         value=>{return value.rows[0]}
     ).catch(err=>console.log(err))
 

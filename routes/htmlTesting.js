@@ -59,11 +59,12 @@ function test(testcase, taskSolution) {
 }
 
 router.get('/htmlTesting', async function(req, res, next){
-    //hardcoded idZadatak
+    //hardcoded idZadatak i jmbag
     let idZadatak = 2
+    let jmbag = '0036123456'
     let testcases = await db.getTestcase(idZadatak)
     //console.log(testcases)
-    let taskSolution = await db.getLastSolution(idZadatak)
+    let taskSolution = await db.getLastSolution(idZadatak, jmbag)
     //console.log(taskSolution.file)
 
     for(let testcase of testcases) {
