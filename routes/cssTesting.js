@@ -3,20 +3,22 @@ var router = express.Router();
 const db = require('../db');
 const fs = require('fs');
 
-router.get('/cssTesting', async function (req, res, next) {
+router.post('/cssTesting', async function (req, res, next) {
     console.log("Entering css testing");
-    //TODO Hardcoded taskID
+    //TODO Hardcoded taskID, jmbag
     let idzadatak = 2;
+    let jmbag="0036123456";
     let testcases = await db.getTestcase(idzadatak)
-    console.log("Testcases: " + JSON.stringify(testcases));
+    // console.log("Testcases: " + JSON.stringify(testcases));
     // fs.readFile('/mnt/d/web projekti/webgar/routes/test.css', 'utf8', async (err, data) => {
     //     if(err){
     //         console.log("Error: "+err);
     //     }else{
-    //TODO Hardcoded solvedTaskID
+    //TODO Hardcoded jmbag
     let idRijesenZadatak = 3
-    let taskSolution = await db.getSolution(idRijesenZadatak)
-    console.log(taskSolution)
+
+    let taskSolution = await db.getLastSolution(idzadatak, jmbag)
+    // console.log(taskSolution)
     let data = taskSolution.file
     //parsiranje css datoteke
     data = data.replace((/  |\r\n|\n|\r/gm), "");
@@ -65,8 +67,8 @@ router.get('/cssTesting', async function (req, res, next) {
             }
         }
     }
-    console.log(propArr);
-    console.log(output);
+    // console.log(propArr);
+    // console.log(output);
 
     let resultsArr = [];
 

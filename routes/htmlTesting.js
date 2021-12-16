@@ -58,7 +58,7 @@ function test(testcase, taskSolution) {
     }
 }
 
-router.get('/htmlTesting', async function(req, res, next){
+router.post('/htmlTesting', async function(req, res, next){
     //hardcoded idZadatak i jmbag
     let idZadatak = 2
     let jmbag = '0036123456'

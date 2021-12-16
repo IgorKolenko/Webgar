@@ -49,18 +49,18 @@ async function testFunction(testcase, taskSolution){
 }
 
 
-router.get('/jsTesting', async function (req, res, next) {
+router.post('/jsTesting', async function (req, res, next) {
     // Mock testcase
     // let testcase = {
     //     imeFunkcije: "f1",
     //     input:"1,2",
     //     output: "3"
     // };
-    //TODO Hardcoded zadatak id
-    let allTestcases=await db.getTestcase(1)
-
-    //TODO Hardcoded idrijesenzadatak
-    let taskSolution=await db.getSolution(2)
+    //TODO Hardcoded zadatak id i jmbag
+    let idZadatak=1
+    let jmbag="0036123456"
+    let allTestcases=await db.getTestcase(idZadatak)
+    let taskSolution = await db.getLastSolution(idZadatak, jmbag)
     // console.log(taskSolution.file)
 
     for(let item of allTestcases){
