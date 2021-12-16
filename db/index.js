@@ -25,13 +25,15 @@ async function getTestcase(idzadatka){
     return res
 }
 
-async function getSolution(idRijesenZadatak){
-    let res=await pool.query('SELECT * FROM riješenizadatak WHERE idriješenizadatak=$1',[idRijesenZadatak]).then(
-        value=>{return value.rows[0]}
-    ).catch(err=>console.log(err))
 
-    return res
-}
+
+// async function getSolution(idRijesenZadatak){
+//     let res=await pool.query('SELECT * FROM riješenizadatak WHERE idriješenizadatak=$1',[idRijesenZadatak]).then(
+//         value=>{return value.rows[0]}
+//     ).catch(err=>console.log(err))
+//
+//     return res
+// }
 
 async function getLastSolution(idzadatak, jmbag){
     let res=await pool.query('SELECT * FROM riješenizadatak WHERE idzadatak=$1 AND jmbag=$2 ORDER BY uploaddate DESC LIMIT 1',[idzadatak, jmbag]).then(
@@ -39,6 +41,13 @@ async function getLastSolution(idzadatak, jmbag){
     ).catch(err=>console.log(err))
 
     return res
+}
+
+async function insertSolution(file,uploaddate,jmbag,taskID){
+    await pool.query('INSERT INTO riješenizadatak (file,uploaddate,jmbag,idzadatak) VALUES ($1,$2,$3,$4)',
+        [file,uploaddate,jmbag,taskID]).catch(
+            err=>{console.log(err)}
+    )
 }
 
 async function insertResult(testResult, idTestcase, idRijeseniZadatak){
@@ -60,7 +69,7 @@ module.exports = {
     },
     pool: pool,
     getTestcase,
-    getSolution,
     insertResult,
-    getLastSolution
+    getLastSolution,
+    insertSolution
 }
