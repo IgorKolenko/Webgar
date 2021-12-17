@@ -25,15 +25,12 @@ async function getTestcase(idzadatka){
     return res
 }
 
-
-
-// async function getSolution(idRijesenZadatak){
-//     let res=await pool.query('SELECT * FROM riješenizadatak WHERE idriješenizadatak=$1',[idRijesenZadatak]).then(
-//         value=>{return value.rows[0]}
-//     ).catch(err=>console.log(err))
-//
-//     return res
-// }
+async function getTask(taskID){
+    let res = await pool.query('SELECT * FROM zadatak WHERE idzadatak=$1',[taskID]).then(
+        value => {return value.rows[0]}
+    ).catch(err=>{console.log(err)})
+    return res
+}
 
 async function getLastSolution(idzadatak, jmbag){
     let res=await pool.query('SELECT * FROM riješenizadatak WHERE idzadatak=$1 AND jmbag=$2 ORDER BY uploaddate DESC LIMIT 1',[idzadatak, jmbag]).then(
@@ -44,19 +41,35 @@ async function getLastSolution(idzadatak, jmbag){
 }
 
 async function insertSolution(file,uploaddate,jmbag,taskID){
-    await pool.query('INSERT INTO riješenizadatak (file,uploaddate,jmbag,idzadatak) VALUES ($1,$2,$3,$4)',
-        [file,uploaddate,jmbag,taskID]).catch(
+    let res=await pool.query('INSERT INTO riješenizadatak (file,uploaddate,jmbag,idzadatak) VALUES ($1,$2,$3,$4) RETURNING idriješenizadatak',
+        [file,uploaddate,jmbag,taskID]).then(
+            value=>{return value.rows[0].idriješenizadatak}
+    ).catch(
             err=>{console.log(err)}
     )
+    return res
 }
 
 async function insertResult(testResult, idTestcase, idRijeseniZadatak){
     await pool.query('INSERT INTO rezultat (prolaz, idtestcase, idriješenizadatak) VALUES ($1,$2,$3)',
         [testResult, idTestcase,idRijeseniZadatak,]).catch(
-        err=>{console.log(err)}
+        err=>{console.log("INSERT RESULTS\n"+err)}
     )
 }
 
+async function getActiveTasks(){
+    let res=await pool.query('SELECT * FROM zadatak WHERE active=1').then(
+        value => {return value.rows}
+    ).catch(err =>{"GET ACTIVE TASKS\n"+console.log(err)})
+    return res
+}
+
+async function getSolutionResults(solvedTaskID){
+    let res=await pool.query('SELECT * FROM rezultat WHERE idriješenizadatak=$1',[solvedTaskID]).then(
+        value => {return value.rows}
+    ).catch(err =>{console.log("GET SOLUTION RESULTS\n"+err)})
+    return res
+}
 module.exports = {
     query: (text, params) => {
         const start = Date.now();
@@ -71,5 +84,8 @@ module.exports = {
     getTestcase,
     insertResult,
     getLastSolution,
-    insertSolution
+    insertSolution,
+    getTask,
+    getActiveTasks,
+    getSolutionResults
 }
