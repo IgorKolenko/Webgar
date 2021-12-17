@@ -1,19 +1,70 @@
 var express = require('express');
 var router = express.Router();
 const db = require('../db');
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+
+router.get('/activeTasks', async function (req,res,next){
+    let activeTasks=await db.getActiveTasks();
+    res.send(activeTasks);
+});
+
+router.get('/:taskID', async function (req,res,next){
+    let task=await db.getTask(req.params.taskID);
+    res.send(task);
+});
+
 
 router.post('/newSolution',async function(req,res,next){
     //TODO HARDCODED VARIABLES
-    let file="TEMP";
-    let jmbag="0036123456";
-    let idzadatak="1";
+    let file=req.body.file;
+    let jmbag="0036123456"; // ubuduce req.body.jmbag ?
+    let taskID=1; // ubuduce req.body.taskID?
     let uploaddate=new Date();
-    try{
-        await db.insertSolution(file,uploaddate,jmbag,idzadatak)
-    }catch{
+
+
+    let solvedTaskID=await db.insertSolution(file,uploaddate,jmbag,taskID).catch(err=>{
+        console.log(err)
         res.sendStatus(500)
+    });
+
+
+    let task=await db.getTask(taskID)
+    let taskType=task.idvrsta
+    // console.log("TASKTYPE "+taskType)
+    var hostUrl =req.protocol + '://' + req.get('host');
+
+    let params={
+        jmbag: jmbag,
+        taskID: taskID
     }
-    res.sendStatus(200)
+    //HTML
+    if(taskType==1){
+        await fetch(hostUrl+'/html/htmlTesting',{
+            method: 'POST',
+            body: JSON.stringify(params),
+            headers: { 'Content-Type': 'application/json' }
+        })
+    }
+    //CSS
+    else if (taskType==2){
+        await fetch(hostUrl+'/css/cssTesting',{
+            method: 'POST',
+            body: JSON.stringify(params),
+            headers: { 'Content-Type': 'application/json' }
+        })
+    }
+    //JS
+    else if(taskType==3){
+        await fetch(hostUrl+'/js/jsTesting',{
+            method: 'POST',
+            body: JSON.stringify(params),
+            headers: { 'Content-Type': 'application/json' }
+        })
+    }
+    // console.log(solvedTaskID)
+    let testcaseResults=await db.getSolutionResults(solvedTaskID)
+    // res.sendStatus(200)
+    res.send(testcaseResults)
 });
 
 
