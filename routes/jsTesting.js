@@ -50,28 +50,15 @@ async function testFunction(testcase, taskSolution){
 
 
 router.post('/jsTesting', async function (req, res, next) {
-    // Mock testcase
-    // let testcase = {
-    //     imeFunkcije: "f1",
-    //     input:"1,2",
-    //     output: "3"
-    // };
-    //TODO Hardcoded zadatak id i jmbag
-    let idZadatak=1
-    let jmbag="0036123456"
+    let idZadatak=req.body.taskID
+    let jmbag=req.body.jmbag
+
     let allTestcases=await db.getTestcase(idZadatak)
     let taskSolution = await db.getLastSolution(idZadatak, jmbag)
-    // console.log(taskSolution.file)
 
     for(let item of allTestcases){
-        // console.log(item)
         await testFunction(item,taskSolution)
     }
-    // allTestcases.forEach(item=>{
-    //     let testcase=JSON.parse(item.json)
-    //     testFunction(testcase,taskSolution)
-    // })
-
 
     res.json({ok: true});
 });

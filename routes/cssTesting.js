@@ -5,20 +5,15 @@ const fs = require('fs');
 
 router.post('/cssTesting', async function (req, res, next) {
     console.log("Entering css testing");
-    //TODO Hardcoded taskID, jmbag
-    let idzadatak = 2;
-    let jmbag="0036123456";
-    let testcases = await db.getTestcase(idzadatak)
-    // console.log("Testcases: " + JSON.stringify(testcases));
-    // fs.readFile('/mnt/d/web projekti/webgar/routes/test.css', 'utf8', async (err, data) => {
-    //     if(err){
-    //         console.log("Error: "+err);
-    //     }else{
-    //TODO Hardcoded jmbag
-    let idRijesenZadatak = 3
 
+    let idzadatak=req.body.taskID
+    let jmbag=req.body.jmbag
+
+    let testcases = await db.getTestcase(idzadatak)
     let taskSolution = await db.getLastSolution(idzadatak, jmbag)
-    // console.log(taskSolution)
+
+    let idRijesenZadatak = taskSolution.idriješenizadatak
+
     let data = taskSolution.file
     //parsiranje css datoteke
     data = data.replace((/  |\r\n|\n|\r/gm), "");
