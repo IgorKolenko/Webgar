@@ -52,9 +52,11 @@ async function testFunction(testcase, taskSolution){
 router.post('/jsTesting', async function (req, res, next) {
     let idZadatak=req.body.taskID
     let jmbag=req.body.jmbag
+    let solvedTaskID=req.body.solvedTaskID
 
     let allTestcases=await db.getTestcase(idZadatak)
-    let taskSolution = await db.getLastSolution(idZadatak, jmbag)
+    // let taskSolution = await db.getLastSolution(idZadatak, jmbag)
+    let taskSolution=await db.getSolution(solvedTaskID)
 
     for(let item of allTestcases){
         await testFunction(item,taskSolution)

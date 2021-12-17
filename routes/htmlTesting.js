@@ -61,10 +61,11 @@ function test(testcase, taskSolution) {
 router.post('/htmlTesting', async function(req, res, next){
     let idZadatak=req.body.taskID
     let jmbag=req.body.jmbag
-
+    let solvedTaskID=req.body.solvedTaskID
     let testcases = await db.getTestcase(idZadatak)
     //console.log(testcases)
-    let taskSolution = await db.getLastSolution(idZadatak, jmbag)
+    // let taskSolution = await db.getLastSolution(idZadatak, jmbag)
+    let taskSolution= await db.getSolution(solvedTaskID)
     //console.log(taskSolution.file)
 
     for(let testcase of testcases) {

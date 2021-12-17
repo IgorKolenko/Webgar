@@ -8,9 +8,10 @@ router.post('/cssTesting', async function (req, res, next) {
 
     let idzadatak=req.body.taskID
     let jmbag=req.body.jmbag
-
+    let solvedTaskID=req.body.solvedTaskID
     let testcases = await db.getTestcase(idzadatak)
-    let taskSolution = await db.getLastSolution(idzadatak, jmbag)
+    // let taskSolution = await db.getLastSolution(idzadatak, jmbag)
+    let taskSolution=await db.getSolution(solvedTaskID)
 
     let idRijesenZadatak = taskSolution.idriješenizadatak
 

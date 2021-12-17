@@ -4,7 +4,7 @@ const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
     database: 'projektR',
-    password: "bazepodataka",
+    password: "ferbp",
     port: 5432,
 });
 
@@ -34,6 +34,14 @@ async function getTask(taskID){
 
 async function getLastSolution(idzadatak, jmbag){
     let res=await pool.query('SELECT * FROM riješenizadatak WHERE idzadatak=$1 AND jmbag=$2 ORDER BY uploaddate DESC LIMIT 1',[idzadatak, jmbag]).then(
+        value=>{return value.rows[0]}
+    ).catch(err=>console.log(err))
+
+    return res
+}
+
+async function getSolution(solvedTaskID){
+    let res=await pool.query('SELECT * FROM riješenizadatak WHERE idriješenizadatak=$1',[solvedTaskID]).then(
         value=>{return value.rows[0]}
     ).catch(err=>console.log(err))
 
@@ -87,5 +95,6 @@ module.exports = {
     insertSolution,
     getTask,
     getActiveTasks,
-    getSolutionResults
+    getSolutionResults,
+    getSolution
 }
