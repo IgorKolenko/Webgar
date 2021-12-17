@@ -27,7 +27,6 @@ router.post('/newSolution',async function(req,res,next){
         res.sendStatus(500)
     });
 
-
     let task=await db.getTask(taskID)
     let taskType=task.idvrsta
     // console.log("TASKTYPE "+taskType)
@@ -35,7 +34,8 @@ router.post('/newSolution',async function(req,res,next){
 
     let params={
         jmbag: jmbag,
-        taskID: taskID
+        taskID: taskID,
+        solvedTaskID: solvedTaskID
     }
     //HTML
     if(taskType==1){
