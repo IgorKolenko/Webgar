@@ -23,6 +23,30 @@ h2{
     text-align: start;
 }
 
+p{
+    font-family: 'PT Sans', sans-serif;
+    font-size: 36px;
+    text-align: start;
+    margin: 10px 10px 10px 10px;
+}
+
+.fileDiv{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.fileDiv button{
+    width: 250px;
+}
+
+.fileName{
+    font-size: 24px;
+}
+
 .customBtn{
     font-family: 'PT Sans', sans-serif;
     font-weight: 400;
@@ -43,6 +67,10 @@ h2{
 
 @media only screen and (max-width: 700px){
     .pageTitle{
+        text-align: center;
+    }
+
+    p{
         text-align: center;
     }
 }

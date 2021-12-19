@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router();
 const db = require('../db');
+const cssTest = require('./cssTesting');
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 router.get('/activeTasks', async function (req,res,next){
@@ -16,9 +17,10 @@ router.get('/:taskID', async function (req,res,next){
 
 router.post('/newSolution',async function(req,res,next){
     //TODO HARDCODED VARIABLES
-    let file=req.body.file;
+    console.log(JSON.stringify(req.body));
+    let file=req.body.fileData;
     let jmbag="0036123456"; // ubuduce req.body.jmbag ?
-    let taskID=1; // ubuduce req.body.taskID?
+    let taskID=req.body.zadatakId; // ubuduce req.body.taskID?
     let uploaddate=new Date();
 
 
@@ -31,6 +33,7 @@ router.post('/newSolution',async function(req,res,next){
     let taskType=task.idvrsta
     // console.log("TASKTYPE "+taskType)
     var hostUrl =req.protocol + '://' + req.get('host');
+    console.log("HostUrl: "+hostUrl);
 
     let params={
         jmbag: jmbag,
@@ -47,11 +50,16 @@ router.post('/newSolution',async function(req,res,next){
     }
     //CSS
     else if (taskType==2){
+        console.log("Testiranje css zadatka");
+        let res = await cssTest(jmbag, taskID, solvedTaskID);
+        /*
         await fetch(hostUrl+'/css/cssTesting',{
             method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(params),
-            headers: { 'Content-Type': 'application/json' }
         })
+        */
+       console.log(res);
     }
     //JS
     else if(taskType==3){
