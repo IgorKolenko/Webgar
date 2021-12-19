@@ -16,7 +16,8 @@ class PogledZadatka extends React.Component{
             zadatakId: 1,
             file: [],
             isSelected: false,
-            fileData: ""
+            fileData: "",
+            results: []
         }
         this.changeHandler = this.changeHandler.bind(this);
         this.saljiServeru = this.saljiServeru.bind(this);
@@ -40,11 +41,13 @@ class PogledZadatka extends React.Component{
         const reader = new FileReader()
         let data = ""
         console.log("file: "+JSON.stringify(event.target.files[0]));
+        let file = event.target.files[0];
         reader.onload = async (event) => {
             const text = event.target.result
             this.setState({
                 isSelected: true,
-                fileData: text
+                fileData: text,
+                file: file
             })
             console.log(text)
             console.log(typeof(text))
@@ -64,12 +67,17 @@ class PogledZadatka extends React.Component{
             method: "POST",
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(params)
-        }).then(res => res.json()).then(res => console.log(JSON.stringify(res)));
+        }).then(res => res.json()).then(res => {
+            this.setState({
+                results: res
+            })
+        });
     }
     
     render(){
         console.log("fileData: "+this.state.fileData);
         console.log("File: "+ JSON.stringify(this.state.file));
+        let count = 0;
         return(
             <div className='body'>
                 <h1 className="pageTitle">{this.state.imeZadatak}</h1>
@@ -90,12 +98,23 @@ class PogledZadatka extends React.Component{
                     <button className='customBtn' onClick={(e) => this.saljiServeru(e)}>Predajte datoteku</button>
                 </div>
                 <h2>Rezultati provjera</h2>
-                <table>
-                    <tr>
-                        <th>Testcase1</th>
-                        <th style={{backgroundColor: "green"}}>Prošao</th>
-                    </tr>
-                </table>
+                {this.state.results.length > 0 ? (
+                    <table>
+                        {this.state.results.map(res => {
+                            count++;
+                            return (
+                                <tr>
+                                    <th>Testcase{count}</th>
+                                    {res.prolaz == 1 ? (
+                                        <th style={{backgroundColor: "green"}}>Prošao</th>
+                                    ) : (
+                                        <th style={{backgroundColor: "red"}}>Nije prošao</th>
+                                    )}
+                                </tr>
+                            )
+                        })}
+                    </table>
+                ) : (<div></div>)}
             </div>
         )
     }
