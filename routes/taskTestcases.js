@@ -2,6 +2,8 @@ var express = require('express');
 var router = express.Router();
 const db = require('../db');
 const cssTest = require('./cssTesting');
+const jsTester=require('./jsTesting')
+const htmlTester = require('./htmlTesting')
 const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
 router.get('/activeTasks', async function (req,res,next){
@@ -42,11 +44,12 @@ router.post('/newSolution',async function(req,res,next){
     }
     //HTML
     if(taskType==1){
-        await fetch(hostUrl+'/html/htmlTesting',{
-            method: 'POST',
-            body: JSON.stringify(params),
-            headers: { 'Content-Type': 'application/json' }
-        })
+        // await fetch(hostUrl+'/html/htmlTesting',{
+        //     method: 'POST',
+        //     body: JSON.stringify(params),
+        //     headers: { 'Content-Type': 'application/json' }
+        // })
+        await htmlTester.testHTML(taskID,jmbag,solvedTaskID)
     }
     //CSS
     else if (taskType==2){
@@ -63,11 +66,12 @@ router.post('/newSolution',async function(req,res,next){
     }
     //JS
     else if(taskType==3){
-        await fetch(hostUrl+'/js/jsTesting',{
-            method: 'POST',
-            body: JSON.stringify(params),
-            headers: { 'Content-Type': 'application/json' }
-        })
+        // await fetch(hostUrl+'/js/jsTesting',{
+        //     method: 'POST',
+        //     body: JSON.stringify(params),
+        //     headers: { 'Content-Type': 'application/json' }
+        // })
+        await jsTester.testJS(taskID,jmbag,solvedTaskID)
     }
     // console.log(solvedTaskID)
     let testcaseResults=await db.getSolutionResults(solvedTaskID)

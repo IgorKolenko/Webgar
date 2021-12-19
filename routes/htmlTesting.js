@@ -58,10 +58,35 @@ function test(testcase, taskSolution) {
     }
 }
 
-router.post('/htmlTesting', async function(req, res, next){
-    let idZadatak=req.body.taskID
-    let jmbag=req.body.jmbag
-    let solvedTaskID=req.body.solvedTaskID
+// router.post('/htmlTesting', async function(req, res, next){
+//     let idZadatak=req.body.taskID
+//     let jmbag=req.body.jmbag
+//     let solvedTaskID=req.body.solvedTaskID
+//     let testcases = await db.getTestcase(idZadatak)
+//     //console.log(testcases)
+//     // let taskSolution = await db.getLastSolution(idZadatak, jmbag)
+//     let taskSolution= await db.getSolution(solvedTaskID)
+//     //console.log(taskSolution.file)
+//
+//     for(let testcase of testcases) {
+//         let prolaz = test(testcase, taskSolution)
+//
+//         if(prolaz) {
+//             await db.insertResult(1, testcase.idtestcase, taskSolution.idriješenizadatak)
+//             console.log("SUCCESS")
+//         } else {
+//             await db.insertResult(0, testcase.idtestcase, taskSolution.idriješenizadatak)
+//             console.log("FAIL")
+//         }
+//     }
+//
+//     res.send("DONE")
+// });
+
+async function testHTML(taskID,student,solvedTask){
+    let idZadatak=taskID
+    let jmbag=student
+    let solvedTaskID=solvedTask
     let testcases = await db.getTestcase(idZadatak)
     //console.log(testcases)
     // let taskSolution = await db.getLastSolution(idZadatak, jmbag)
@@ -79,8 +104,8 @@ router.post('/htmlTesting', async function(req, res, next){
             console.log("FAIL")
         }
     }
+}
 
-    res.send("DONE")
-});
-
-module.exports= router
+module.exports= {
+    testHTML
+}

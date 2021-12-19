@@ -49,10 +49,26 @@ async function testFunction(testcase, taskSolution){
 }
 
 
-router.post('/jsTesting', async function (req, res, next) {
-    let idZadatak=req.body.taskID
-    let jmbag=req.body.jmbag
-    let solvedTaskID=req.body.solvedTaskID
+// router.post('/jsTesting', async function (req, res, next) {
+//     let idZadatak=req.body.taskID
+//     let jmbag=req.body.jmbag
+//     let solvedTaskID=req.body.solvedTaskID
+//
+//     let allTestcases=await db.getTestcase(idZadatak)
+//     // let taskSolution = await db.getLastSolution(idZadatak, jmbag)
+//     let taskSolution=await db.getSolution(solvedTaskID)
+//
+//     for(let item of allTestcases){
+//         await testFunction(item,taskSolution)
+//     }
+//
+//     res.json({ok: true});
+// });
+
+async function testJS(taskID,student,solvedTask){
+    let idZadatak=taskID
+    let jmbag=student
+    let solvedTaskID=solvedTask
 
     let allTestcases=await db.getTestcase(idZadatak)
     // let taskSolution = await db.getLastSolution(idZadatak, jmbag)
@@ -61,8 +77,8 @@ router.post('/jsTesting', async function (req, res, next) {
     for(let item of allTestcases){
         await testFunction(item,taskSolution)
     }
+}
 
-    res.json({ok: true});
-});
-
-module.exports = router
+module.exports = {
+    testJS
+}
