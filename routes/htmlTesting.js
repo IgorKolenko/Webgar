@@ -97,10 +97,10 @@ async function testHTML(taskID,student,solvedTask){
         let prolaz = test(testcase, taskSolution)
 
         if(prolaz) {
-            await db.insertResult(1, testcase.idtestcase, taskSolution.idriješenizadatak)
+            await db.insertResult(testcase.idtestcase, taskSolution.idriješenizadatak, true)
             console.log("SUCCESS")
         } else {
-            await db.insertResult(0, testcase.idtestcase, taskSolution.idriješenizadatak)
+            await db.insertResult(testcase.idtestcase, taskSolution.idriješenizadatak, false)
             console.log("FAIL")
         }
     }

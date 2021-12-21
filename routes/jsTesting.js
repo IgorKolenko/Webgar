@@ -34,16 +34,16 @@ async function testFunction(testcase, taskSolution){
         // Test Result
         if (result == testcaseData.output) {
             // Rezultat ispravan
-            await db.insertResult(1, testcase.idtestcase,taskSolution.idriješenizadatak)
+            await db.insertResult(testcase.idtestcase,taskSolution.idriješenizadatak, true)
             console.log("SUCCESS")
         } else {
             //Rezultat neispravan
-            await db.insertResult(0,testcase.idtestcase,taskSolution.idriješenizadatak)
+            await db.insertResult(testcase.idtestcase,taskSolution.idriješenizadatak, false)
             console.log("FAIL")
         }
     } else {
         // Nije se nasla funkcija → rezultat neispravan
-        await db.insertResult(0, testcase.idtestcase,taskSolution.idriješenizadatak)
+        await db.insertResult(testcase.idtestcase,taskSolution.idriješenizadatak, false)
         console.log("FAIL")
     }
 }

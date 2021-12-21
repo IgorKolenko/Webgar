@@ -5,7 +5,7 @@ const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
     database: 'projektR',
-    password: "bayepodataka",
+    password: "bazepodataka",
     port: 5432,
 });
 
@@ -62,15 +62,15 @@ async function insertSolution(file,uploaddate,jmbag,taskID){
     return res
 }
 
-async function insertResult(testResult, idTestcase, idRijeseniZadatak){
-    await pool.query('INSERT INTO rezultat (prolaz, idtestcase, idriješenizadatak) VALUES ($1,$2,$3)',
-        [testResult, idTestcase,idRijeseniZadatak,]).catch(
+async function insertResult(idTestcase, idRijeseniZadatak, testResult){
+    await pool.query('INSERT INTO rezultat (idtestcase, idriješenizadatak, prolaz) VALUES ($1,$2,$3)',
+        [idTestcase,idRijeseniZadatak,testResult]).catch(
         err=>{console.log("INSERT RESULTS\n"+err)}
     )
 }
 
 async function getActiveTasks(){
-    let res=await pool.query('SELECT * FROM zadatak WHERE active=1').then(
+    let res=await pool.query('SELECT * FROM zadatak WHERE active=true').then(
         value => {return value.rows}
     ).catch(err =>{"GET ACTIVE TASKS\n"+console.log(err)})
     return res

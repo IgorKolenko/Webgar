@@ -127,9 +127,9 @@ async function CssTesting(jmbag, idzadatak, solvedTaskID){
     for (let rez of resultsArr) {
         console.log("Rezultat: " + rez[1]);
         if (rez[1]) {
-            await db.insertResult(1, parseInt(rez[0]), idRijesenZadatak);
+            await db.insertResult(parseInt(rez[0]), idRijesenZadatak, true);
         } else {
-            await db.insertResult(0, parseInt(rez[0]), idRijesenZadatak);
+            await db.insertResult(parseInt(rez[0]), idRijesenZadatak, false);
         }
     }
 
