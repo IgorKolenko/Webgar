@@ -11,6 +11,11 @@ router.get('/activeTasks', async function (req,res,next){
     res.send(activeTasks);
 });
 
+router.get('/professors', async function (req,res,next){
+    let professors=await db.getProfessors();
+    res.send(professors);
+});
+
 router.get('/:taskID', async function (req,res,next){
     let task=await db.getTask(req.params.taskID);
     res.send(task);

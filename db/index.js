@@ -82,6 +82,21 @@ async function getSolutionResults(solvedTaskID){
     ).catch(err =>{console.log("GET SOLUTION RESULTS\n"+err)})
     return res
 }
+
+// async function getProfessor(idprofesor){
+//     let res=await pool.query('SELECT * FROM profesor WHERE idprofesor=$1',[idprofesor]).then(
+//         value => {return value.rows[0]}
+//     ).catch(err=>console.log(err))
+//     return res
+// }
+
+async function getProfessors(){
+    let res=await pool.query('SELECT * FROM profesor',[]).then(
+        value => {return value.rows}
+    ).catch(err=>console.log(err))
+    return res
+}
+
 module.exports = {
     query: (text, params) => {
         const start = Date.now();
@@ -100,5 +115,6 @@ module.exports = {
     getTask,
     getActiveTasks,
     getSolutionResults,
-    getSolution
+    getSolution,
+    getProfessors
 }
