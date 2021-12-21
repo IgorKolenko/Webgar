@@ -94,8 +94,8 @@ router.post('/addTask',async function (req,res,next){
     // Insert Task into database
     //TODO Currently Hardcoded profesorID
     let professorID = 1;
-    let result=await db.query('INSERT INTO zadatak (imeZadatak,opisZadatak,idProfesor,idVrsta,active) VALUES($1,$2,$3,$4,$5) RETURNING idzadatak',
-        [imeZadatak, opisZadatak, professorID, vrstaZadatak, true]).catch(
+    let result=await db.query('INSERT INTO zadatak (imeZadatak,opisZadatak,idProfesor,idVrsta,active,datum) VALUES($1,$2,$3,$4,$5,$6) RETURNING idzadatak',
+        [imeZadatak, opisZadatak, professorID, vrstaZadatak, true, new Date()]).catch(
         err=>{
             console.log(err)
             res.sendStatus(500)
