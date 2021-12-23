@@ -80,7 +80,6 @@ router.post('/newSolution',async function(req,res,next){
     }
     // console.log(solvedTaskID)
     let testcaseResults=await db.getSolutionResults(solvedTaskID)
-    // res.sendStatus(200)
     res.send(testcaseResults)
 });
 
@@ -94,29 +93,18 @@ router.post('/addTask',async function (req,res,next){
     // Insert Task into database
     //TODO Currently Hardcoded profesorID
     let professorID = 1;
-    let result=await db.query('INSERT INTO zadatak (imeZadatak,opisZadatak,idProfesor,idVrsta,active,datum) VALUES($1,$2,$3,$4,$5,$6) RETURNING idzadatak',
-        [imeZadatak, opisZadatak, professorID, vrstaZadatak, true, new Date()]).catch(
-        err=>{
-            console.log(err)
-            res.sendStatus(500)
-        }
-    );
+    let taskID = await db.insertTask(imeZadatak,opisZadatak,professorID,vrstaZadatak,true,new Date())
 
     // Insert testcase into database
-    console.log("res: "+JSON.stringify(result));
-    console.log("TasksID: "+JSON.stringify(result.rows[0].idzadatak));
-    console.log("Testcases: "+JSON.stringify(testcases));
+    // console.log("res: "+JSON.stringify(result));
+    // console.log("TasksID: "+JSON.stringify(taskID));
+    // console.log("Testcases: "+JSON.stringify(testcases));
     for (const testcase of testcases) {
         //Body ima vrstaTestCase,imeTestCase,imeFunkcije,input,output
         console.log("Spremanje u bazu testcase: "+testcase.imeTestCase);
         //let testCaseJSON=JSON.stringify({funcName: testcase.JSON.imeFunkcije, input: testcase.JSON.input, output: testcase.JSON.output})
-        await db.query(`INSERT INTO testcase (imeTestCase,JSON,vrstaTestCase,idZadatak)
-                            VALUES ('${testcase.imeTestCase}','${JSON.stringify(testcase.JSON)}','${testcase.vrstaTestCase}',${result.rows[0].idzadatak})`).catch(
-                                err=>{
-                                    console.log(err)
-                                    res.sendStatus(500)
-                                }
-        );
+        await db.insertTestcase(testcase.imeTestCase,JSON.stringify(testcase.JSON),testcase.vrstaTestCase,taskID)
+
     }
     res.json({ok:true})
 });
