@@ -11,6 +11,11 @@ router.get('/activeTasks', async function (req,res,next){
     res.send(activeTasks);
 });
 
+router.get('/inactiveTasks',async function(req,res,next){
+    let inactiveTasks=db.getInactiveTasks();
+    res.send(inactiveTasks)
+})
+
 router.get('/professors', async function (req,res,next){
     let professors=await db.getProfessors();
     res.send(professors);
@@ -24,7 +29,7 @@ router.get('/:taskID', async function (req,res,next){
 
 router.post('/newSolution',async function(req,res,next){
     //TODO HARDCODED VARIABLES
-    console.log(JSON.stringify(req.body));
+    // console.log(JSON.stringify(req.body));
     let file=req.body.fileData;
     let jmbag="0036123456"; // ubuduce req.body.jmbag ?
     let taskID=req.body.zadatakId; // ubuduce req.body.taskID?

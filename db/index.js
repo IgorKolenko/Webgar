@@ -72,7 +72,14 @@ async function insertResult(idTestcase, idRijeseniZadatak, testResult){
 async function getActiveTasks(){
     let res=await pool.query('SELECT * FROM zadatak WHERE active=true').then(
         value => {return value.rows}
-    ).catch(err =>{"GET ACTIVE TASKS\n"+console.log(err)})
+    ).catch(err =>{console.log("GET ACTIVE TASKS\n"+err)})
+    return res
+}
+
+async function getInactiveTasks(){
+    let res=await pool.query('SELECT * FROM zadatak WHERE active=false').then(
+        value => {return value.rows}
+    ).catch(err =>{console.log("GET INACTIVE TASKS\n"+err)})
     return res
 }
 
@@ -129,6 +136,7 @@ module.exports = {
     insertSolution,
     getTask,
     getActiveTasks,
+    getInactiveTasks,
     getSolutionResults,
     getSolution,
     getProfessors,
