@@ -5,7 +5,7 @@ const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
     database: 'projektR',
-    password: "bazepodataka",
+    password: "ferbp",
     port: 5432,
 });
 
@@ -83,6 +83,21 @@ async function getSolutionResults(solvedTaskID){
     return res
 }
 
+async function insertTask(imeZadatak,opisZadatak,professorID,vrstaZadatak,active,date){
+    let res =await pool.query('INSERT INTO zadatak (imeZadatak,opisZadatak,idProfesor,idVrsta,active,datum) VALUES($1,$2,$3,$4,$5,$6) RETURNING idzadatak',
+        [imeZadatak, opisZadatak, professorID,vrstaZadatak,active,date])
+        .then(value => {return value.rows[0].idzadatak})
+        .catch(err =>{console.log("Insert Task error\n"+err)})
+    return res
+}
+
+async function insertTestcase(imeTestCase,JSON,vrstaTestCase,taskID){
+    let res = await pool.query('INSERT INTO testcase (imeTestCase,JSON,vrstaTestCase,idZadatak) VALUES($1,$2,$3,$4) RETURNING idtestcase',
+        [imeTestCase,JSON,vrstaTestCase,taskID])
+        .then( value=>{return value.rows[0].idtestcase})
+        .catch(err=>{console.log('INSERT TESTCASE ERROR\n'+err)})
+    return res
+}
 // async function getProfessor(idprofesor){
 //     let res=await pool.query('SELECT * FROM profesor WHERE idprofesor=$1',[idprofesor]).then(
 //         value => {return value.rows[0]}
@@ -116,5 +131,7 @@ module.exports = {
     getActiveTasks,
     getSolutionResults,
     getSolution,
-    getProfessors
+    getProfessors,
+    insertTask,
+    insertTestcase
 }
