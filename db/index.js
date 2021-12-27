@@ -5,7 +5,11 @@ const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
     database: 'projektR',
+<<<<<<< HEAD
     password: "bayepodataka",
+=======
+    password: "ferbp",
+>>>>>>> 5773d237eb26c4c9f53fa7b8c2cec4d540205291
     port: 5432,
 });
 
@@ -72,7 +76,14 @@ async function insertResult(idTestcase, idRijeseniZadatak, testResult){
 async function getActiveTasks(){
     let res=await pool.query('SELECT * FROM zadatak WHERE active=true').then(
         value => {return value.rows}
-    ).catch(err =>{"GET ACTIVE TASKS\n"+console.log(err)})
+    ).catch(err =>{console.log("GET ACTIVE TASKS\n"+err)})
+    return res
+}
+
+async function getInactiveTasks(){
+    let res=await pool.query('SELECT * FROM zadatak WHERE active=false').then(
+        value => {return value.rows}
+    ).catch(err =>{console.log("GET INACTIVE TASKS\n"+err)})
     return res
 }
 
@@ -83,6 +94,21 @@ async function getSolutionResults(solvedTaskID){
     return res
 }
 
+async function insertTask(imeZadatak,opisZadatak,professorID,vrstaZadatak,active,date){
+    let res =await pool.query('INSERT INTO zadatak (imeZadatak,opisZadatak,idProfesor,idVrsta,active,datum) VALUES($1,$2,$3,$4,$5,$6) RETURNING idzadatak',
+        [imeZadatak, opisZadatak, professorID,vrstaZadatak,active,date])
+        .then(value => {return value.rows[0].idzadatak})
+        .catch(err =>{console.log("Insert Task error\n"+err)})
+    return res
+}
+
+async function insertTestcase(imeTestCase,JSON,vrstaTestCase,taskID){
+    let res = await pool.query('INSERT INTO testcase (imeTestCase,JSON,vrstaTestCase,idZadatak) VALUES($1,$2,$3,$4) RETURNING idtestcase',
+        [imeTestCase,JSON,vrstaTestCase,taskID])
+        .then( value=>{return value.rows[0].idtestcase})
+        .catch(err=>{console.log('INSERT TESTCASE ERROR\n'+err)})
+    return res
+}
 // async function getProfessor(idprofesor){
 //     let res=await pool.query('SELECT * FROM profesor WHERE idprofesor=$1',[idprofesor]).then(
 //         value => {return value.rows[0]}
@@ -114,7 +140,10 @@ module.exports = {
     insertSolution,
     getTask,
     getActiveTasks,
+    getInactiveTasks,
     getSolutionResults,
     getSolution,
-    getProfessors
+    getProfessors,
+    insertTask,
+    insertTestcase
 }
