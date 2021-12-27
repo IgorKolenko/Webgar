@@ -80,8 +80,13 @@ router.post('/newSolution',async function(req,res,next){
     }
     // console.log(solvedTaskID)
     let testcaseResults=await db.getSolutionResults(solvedTaskID)
+    let testcases = await db.getTestcase(taskID)
+    let send = {
+        "results": testcaseResults,
+        "testcases": testcases
+    }
     // res.sendStatus(200)
-    res.send(testcaseResults)
+    res.send(send);
 });
 
 

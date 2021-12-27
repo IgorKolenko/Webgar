@@ -24,7 +24,8 @@ class NoviHtmlZad extends React.Component{
             imeRoditelja: "",
             imeDjeteta: "",
             brPojavljivanja: 0,
-            imeTestCase: ""
+            imeTestcase: "",
+            staroImeTestcase: ""
         }
         this.imeZadatkaChange = this.imeZadatkaChange.bind(this);
         this.opisZadatkaChange = this.opisZadatkaChange.bind(this);
@@ -45,6 +46,13 @@ class NoviHtmlZad extends React.Component{
         this.azurirajTestcaseStrukture = this.azurirajTestcaseStrukture.bind(this);
         this.spremiPromjeneSvojstava = this.spremiPromjeneSvojstava.bind(this);
         this.spremiPromjeneStrukture = this.spremiPromjeneStrukture.bind(this);
+        this.imeTestcaseChange = this.imeTestcaseChange.bind(this);
+    }
+
+    imeTestcaseChange(t){
+        this.setState({
+            imeTestcase: t.target.value
+        })
     }
 
     //Funckija koja ažurira ime zadatka svaki put kada se promjeni vrijednost polja
@@ -161,13 +169,14 @@ class NoviHtmlZad extends React.Component{
             return{
                 prikazStranice: "zadatak",
                 testcasesSvojstva: prevState.testcasesSvojstva.concat({
-                    imeTestCase: "testcase"+prevState.brojTestcaseSvojstava,
+                    imeTestCase: prevState.imeTestcase,
                     JSON: {imeElementa: prevState.imeElementa, svojstva: prevState.svojstva, checkbox: prevState.checkbox},
                     vrstaTestCase: "htmlSvojstva"
                 }),
                 imeElementa: "",
                 svojstva: "",
-                checkbox: false
+                checkbox: false,
+                imeTestcase: ""
             }
         });
     }
@@ -178,13 +187,14 @@ class NoviHtmlZad extends React.Component{
             return{
                 prikazStranice: "zadatak",
                 testcasesStrukture: prevState.testcasesStrukture.concat({
-                    imeTestCase: "testcase"+prevState.brojTestcaseStrukture,
+                    imeTestCase: prevState.imeTestcase,
                     JSON: {imeRoditelja: prevState.imeRoditelja, imeDjeteta: prevState.imeDjeteta, brPojavljivanja: prevState.brPojavljivanja},
                     vrstaTestCase: "htmlStrukture"
                 }),
                 imeRoditelja: "",
                 imeDjeteta: "",
-                brPojavljivanja: 0
+                brPojavljivanja: 0,
+                imeTestcase: ""
             }
         });
     }
@@ -194,7 +204,8 @@ class NoviHtmlZad extends React.Component{
         let ind = this.state.testcasesSvojstva.findIndex(t => t.imeTestCase == ime);
         this.setState({
             prikazStranice: "azurirajSvojstvo",
-            imeTestCase: ime,
+            imeTestcase: this.state.testcasesSvojstva[ind].imeTestCase,
+            staroImeTestcase: this.state.testcasesSvojstva[ind].imeTestCase,
             imeElementa: this.state.testcasesSvojstva[ind].JSON.imeElementa,
             svojstva: this.state.testcasesSvojstva[ind].JSON.svojstva,
             checkbox: this.state.testcasesSvojstva[ind].JSON.checkbox
@@ -206,7 +217,8 @@ class NoviHtmlZad extends React.Component{
         let ind = this.state.testcasesStrukture.findIndex(t => t.imeTestCase == ime);
         this.setState({
             prikazStranice: "azurirajStrukturu",
-            imeTestCase: ime,
+            imeTestcase: this.state.testcasesStrukture[ind].imeTestCase,
+            staroImeTestcase: this.state.testcasesStrukture[ind].imeTestCase,
             imeRoditelja: this.state.testcasesStrukture[ind].JSON.imeRoditelja,
             imeDjeteta: this.state.testcasesStrukture[ind].JSON.imeDjeteta,
             brPojavljivanja: this.state.testcasesStrukture[ind].JSON.brPojavljivanja
@@ -230,34 +242,44 @@ class NoviHtmlZad extends React.Component{
     }
 
     //Funckija za spremanje promjena koje su se desile za testcase svojstava
-    spremiPromjeneSvojstava(){
+    spremiPromjeneSvojstava(e){
+        e.preventDefault();
         let noviArr = this.state.testcasesSvojstva;
-        let ind = noviArr.findIndex(t => t.imeTestCase == this.state.imeTestCase);
+        console.log(JSON.stringify(noviArr));
+        console.log(this.state.imeTestcase);
+        let ind = noviArr.findIndex(t => t.imeTestCase == this.state.staroImeTestcase);
+        console.log("Ind: "+ind);
         noviArr[ind].JSON.imeElementa = this.state.imeElementa;
         noviArr[ind].JSON.svojstva = this.state.svojstva;
         noviArr[ind].JSON.checkbox = this.state.checkbox;
+        noviArr[ind].imeTestCase = this.state.imeTestcase;
         this.setState({
             prikazStranice: "zadatak",
             testcasesSvojstva: noviArr,
             imeElementa: "",
             svojstva: "",
-            checkbox: false
+            checkbox: false,
+            imeTestcase: "",
+            staroImeTestcase: ""
         });
     }
 
     //Funckija za spremanje promjena koje su se desile za testcase strukture
     spremiPromjeneStrukture(){
         let noviArr = this.state.testcasesStrukture;
-        let ind = noviArr.findIndex(t => t.imeTestCase == this.state.imeTestCase);
+        let ind = noviArr.findIndex(t => t.imeTestCase == this.state.staroImeTestcase);
         noviArr[ind].JSON.imeRoditelja = this.state.imeRoditelja;
         noviArr[ind].JSON.imeDjeteta = this.state.imeDjeteta;
         noviArr[ind].JSON.brPojavljivanja = this.state.brPojavljivanja;
+        noviArr[ind].imeTestCase = this.state.imeTestcase;
         this.setState({
             prikazStranice: "zadatak",
             testcasesStrukture: noviArr,
             imeRoditelja: "",
             imeDjeteta: "",
-            brPojavljivanja: 0
+            brPojavljivanja: 0,
+            imeTestcase: "",
+            staroImeTestcase: ""
         });
     }
 
@@ -346,7 +368,10 @@ class NoviHtmlZad extends React.Component{
                 <div className="body">
                     <h1 className="pageTitle">Novi HTML testni slučaj svojstava</h1>
                     <form>
-                        <h2>Testcase{this.state.brojTestcaseSvojstava}</h2>
+                        <div className="formElement">
+                            <label for="imeTestcase">Ime testcase-a:</label>
+                            <input type="text" className="customTextbox" name="imeTestcase" onChange={this.imeTestcaseChange} value={this.state.imeTestcase} />
+                        </div>
                         <div className="formElement">
                             <label for="imeElementa">Element s klasom/id-om:</label>
                             <input type="text" className="customTextbox" name="imeElementa" onChange={this.imeElementaChange} value={this.state.imeElementa} />
@@ -370,7 +395,10 @@ class NoviHtmlZad extends React.Component{
                 <div className="body">
                     <h1 className="pageTitle">Novi HTML testni slučaj strukture</h1>
                     <form>
-                        <h2>Testcase{this.state.brojTestcaseStrukture}</h2>
+                        <div className="formElement">
+                            <label for="imeTestcase">Ime testcase-a:</label>
+                            <input type="text" className="customTextbox" name="imeTestcase" onChange={this.imeTestcaseChange} value={this.state.imeTestcase} />
+                        </div>
                         <div className="formElement">
                             <label for="imeRoditelja">Element roditelj:</label>
                             <input type="text" className="customTextbox" name="imeRoditelja" onChange={this.imeRoditeljaChange} value={this.state.imeRoditelja} />
@@ -394,7 +422,10 @@ class NoviHtmlZad extends React.Component{
                 <div className="body">
                     <h1 className="pageTitle">Ažuriraj testni slučaj svojstava</h1>
                     <form>
-                        <h2>{this.state.imeTestCase}</h2>
+                        <div className="formElement">
+                            <label for="imeTestcase">Ime testcase-a:</label>
+                            <input type="text" className="customTextbox" name="imeTestcase" onChange={this.imeTestcaseChange} value={this.state.imeTestcase} />
+                        </div>
                         <div className="formElement">
                             <label for="imeElementa">Element s klasom/id-om:</label>
                             <input type="text" className="customTextbox" name="imeElementa" onChange={this.imeElementaChange} value={this.state.imeElementa} />
@@ -408,7 +439,7 @@ class NoviHtmlZad extends React.Component{
                             <input type="checkbox" className="customCheckbox" name="checkbox" onChange={this.checkboxChange} checked={this.state.checkbox} />
                         </div>
                         <div class="formBtnContainer2">
-                            <button className="customBtn" onClick={this.spremiPromjeneSvojstava}>Ažuriraj</button>
+                            <button className="customBtn" onClick={(e) => this.spremiPromjeneSvojstava(e)}>Ažuriraj</button>
                         </div>
                     </form>
                 </div>
@@ -418,7 +449,10 @@ class NoviHtmlZad extends React.Component{
                 <div className="body">
                     <h1 className="pageTitle">Ažuriraj testni slučaj strukture</h1>
                     <form>
-                        <h2>{this.state.imeTestCase}</h2>
+                        <div className="formElement">
+                            <label for="imeTestcase">Ime testcase-a:</label>
+                            <input type="text" className="customTextbox" name="imeTestcase" onChange={this.imeTestcaseChange} value={this.state.imeTestcase} />
+                        </div>
                         <div className="formElement">
                             <label for="imeRoditelja">Element roditelj:</label>
                             <input type="text" className="customTextbox" name="imeRoditelja" onChange={this.imeRoditeljaChange} value={this.state.imeRoditelja} />

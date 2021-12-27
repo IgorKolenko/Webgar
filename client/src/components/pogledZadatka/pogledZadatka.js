@@ -17,7 +17,8 @@ class PogledZadatka extends React.Component{
             file: [],
             isSelected: false,
             fileData: "",
-            results: []
+            results: [],
+            testcases: []
         }
         this.changeHandler = this.changeHandler.bind(this);
         this.saljiServeru = this.saljiServeru.bind(this);
@@ -65,11 +66,16 @@ class PogledZadatka extends React.Component{
         console.log(JSON.stringify(params));
         fetch('/tasks/newSolution', {
             method: "POST",
-            headers: {'Content-Type': 'application/json'},
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
             body: JSON.stringify(params)
         }).then(res => res.json()).then(res => {
+            console.log(JSON.stringify(res));
             this.setState({
-                results: res
+                results: res.results,
+                testcases: res.testcases
             })
         });
     }
@@ -77,35 +83,38 @@ class PogledZadatka extends React.Component{
     render(){
         console.log("fileData: "+this.state.fileData);
         console.log("File: "+ JSON.stringify(this.state.file));
+        console.log("Testcases: "+JSON.stringify(this.state.testcases));
         let count = 0;
         return(
             <div className='body'>
-                <h1 className="pageTitle">{this.state.imeZadatak}</h1>
+                <h1 className="pageTitle">Ime zadatka</h1>
+                <p>{this.state.imeZadatak}</p>
                 <br />
+                <h1 className="pageTitle">Opis zadatka</h1>
                 <p>{this.state.opisZadatak}</p>
                 <div className='fileDiv'>
                     <label className='customBtn'>
                         <input type='file' name='file' onChange={this.changeHandler} hidden="true" />
                         Izaberite datoteku
                     </label>
+                    <button className='customBtn' onClick={(e) => this.saljiServeru(e)}>Predajte datoteku</button>
+                </div>
+                <div className='fileDiv'>
                     {this.state.isSelected ? (
                         <p className='fileName'>{this.state.file.name}</p>
                     ) : (
                         <p></p>
                     )}
                 </div>
-                <div className='fileDiv'>
-                    <button className='customBtn' onClick={(e) => this.saljiServeru(e)}>Predajte datoteku</button>
-                </div>
                 <h2>Rezultati provjera</h2>
                 {this.state.results.length > 0 ? (
-                    <table>
+                    <table className='testcaseTable'>
                         {this.state.results.map(res => {
-                            count++;
+                            let ind = this.state.testcases.findIndex(t => t.idtestcase == res.idtestcase)
                             return (
                                 <tr>
-                                    <th>Testcase{count}</th>
-                                    {res.prolaz == 1 ? (
+                                    <th>{this.state.testcases[ind].imetestcase}</th>
+                                    {res.prolaz == true ? (
                                         <th style={{backgroundColor: "green"}}>Prošao</th>
                                     ) : (
                                         <th style={{backgroundColor: "red"}}>Nije prošao</th>

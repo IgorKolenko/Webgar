@@ -18,7 +18,8 @@ class NoviJsZad extends React.Component{
             brojTestcase: 0,
             imeFunkcije: "",
             input: "",
-            output: ""
+            output: "",
+            imeTestcase: ""
         }
         this.imeZadatkaChange = this.imeZadatkaChange.bind(this);
         this.opisZadatkaChange = this.opisZadatkaChange.bind(this);
@@ -31,6 +32,13 @@ class NoviJsZad extends React.Component{
         this.saljiServeru = this.saljiServeru.bind(this);
         this.azurirajTestcase = this.azurirajTestcase.bind(this);
         this.spremiPromjene = this.spremiPromjene.bind(this);
+        this.imeTestcaseChange = this.imeTestcaseChange.bind(this);
+    }
+
+    imeTestcaseChange(t){
+        this.setState({
+            imeTestcase: t.target.value
+        })
     }
 
     //Funckija koja ažurira ime zadatka svaki put kada se promjeni vrijednost polja
@@ -94,13 +102,14 @@ class NoviJsZad extends React.Component{
             return{
                 prikazStranice: "zadatak",
                 testcases: prevState.testcases.concat({
-                    imeTestCase: "testcase"+prevState.brojTestcase,
+                    imeTestCase: prevState.imeTestcase,
                     JSON: {imeFunkcije: prevState.imeFunkcije, input: prevState.input, output: prevState.output},
                     vrstaTestCase: "javascript"
                 }),
                 imeFunkcije: "",
                 input: "",
-                output: ""
+                output: "",
+                imeTestcase: ""
             }
         });
     }
@@ -110,6 +119,7 @@ class NoviJsZad extends React.Component{
         let ind = this.state.testcases.findIndex(t => t.imeTestCase == ime);
         this.setState({
             prikazStranice: ime,
+            imeTestcase: this.state.testcases[ind].imeTestCase,
             imeFunkcije: this.state.testcases[ind].JSON.imeFunkcije,
             input: this.state.testcases[ind].JSON.input,
             output: this.state.testcases[ind].JSON.output
@@ -142,6 +152,7 @@ class NoviJsZad extends React.Component{
         noviArr[ind].JSON.imeFunkcije = this.state.imeFunkcije;
         noviArr[ind].JSON.input = this.state.input;
         noviArr[ind].JSON.output = this.state.output;
+        noviArr[ind].imeTestCase = this.state.imeTestcase;
         this.setState({
             prikazStranice: "zadatak",
             testcases: noviArr,
@@ -205,7 +216,10 @@ class NoviJsZad extends React.Component{
                 <div className="body">
                     <h1 className="pageTitle">Novi javascript testni slučaj</h1>
                     <form>
-                        <h2>Testcase{this.state.brojTestcase}</h2>
+                        <div className="formElement">
+                            <label for="imeTestcase">Ime testcase-a:</label>
+                            <input type="text" className="customTextbox" name="imeTestcase" onChange={this.imeTestcaseChange} value={this.state.imeTestcase} />
+                        </div>
                         <div className="formElement">
                             <label for="ime">Ime funkcije:</label>
                             <input type="text" className="customTextbox" name="ime" onChange={this.imeFunkcijeChange} value={this.state.imeFunkcije} />
@@ -229,7 +243,10 @@ class NoviJsZad extends React.Component{
                 <div className="body">
                     <h1 className="pageTitle">Ažuriraj testni slučaj</h1>
                     <form>
-                        <h2>{this.state.prikazStranice}</h2>
+                        <div className="formElement">
+                            <label for="imeTestcase">Ime testcase-a:</label>
+                            <input type="text" className="customTextbox" name="imeTestcase" onChange={this.imeTestcaseChange} value={this.state.imeTestcase} />
+                        </div>
                         <div className="formElement">
                             <label for="ime">Ime funkcije:</label>
                             <input type="text" className="customTextbox" name="ime" onChange={this.imeFunkcijeChange} value={this.state.imeFunkcije} />

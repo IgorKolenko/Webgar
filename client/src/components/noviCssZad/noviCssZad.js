@@ -18,7 +18,8 @@ class NoviCssZad extends React.Component{
             brojTestcase: 0,
             imeElementa: "",
             svojstva: "",
-            checkbox: false
+            checkbox: false,
+            imeTestcase: ""
         }
         this.imeZadatkaChange = this.imeZadatkaChange.bind(this);
         this.opisZadatkaChange = this.opisZadatkaChange.bind(this);
@@ -31,6 +32,13 @@ class NoviCssZad extends React.Component{
         this.saljiServeru = this.saljiServeru.bind(this);
         this.azurirajTestcase = this.azurirajTestcase.bind(this);
         this.spremiPromjene = this.spremiPromjene.bind(this);
+        this.imeTestcaseChange = this.imeTestcaseChange.bind(this);
+    }
+
+    imeTestcaseChange(t){
+        this.setState({
+            imeTestcase: t.target.value
+        })
     }
 
     //Funckija koja ažurira ime zadatka svaki put kada se promjeni vrijednost polja
@@ -100,13 +108,14 @@ class NoviCssZad extends React.Component{
             return{
                 prikazStranice: "zadatak",
                 testcases: prevState.testcases.concat({
-                    imeTestCase: "testcase"+prevState.brojTestcase,
+                    imeTestCase: prevState.imeTestcase,
                     JSON: {imeElementa: prevState.imeElementa, svojstva: prevState.svojstva, checkbox: prevState.checkbox},
                     vrstaTestCase: "css"
                 }),
                 imeElementa: "",
                 svojstva: "",
-                checkbox: false
+                checkbox: false,
+                imeTestcase: ""
             }
         });
     }
@@ -116,6 +125,7 @@ class NoviCssZad extends React.Component{
         let ind = this.state.testcases.findIndex(t => t.imeTestCase == ime);
         this.setState({
             prikazStranice: ime,
+            imeTestcase: this.state.testcases[ind].imeTestCase,
             imeElementa: this.state.testcases[ind].JSON.imeElementa,
             svojstva: this.state.testcases[ind].JSON.svojstva,
             checkbox: this.state.testcases[ind].JSON.checkbox
@@ -145,12 +155,14 @@ class NoviCssZad extends React.Component{
         noviArr[ind].JSON.imeElementa = this.state.imeElementa;
         noviArr[ind].JSON.svojstva = this.state.svojstva;
         noviArr[ind].JSON.checkbox = this.state.checkbox;
+        noviArr[ind].imeTestCase = this.state.imeTestcase;
         this.setState({
             prikazStranice: "zadatak",
             testcases: noviArr,
             imeElementa: "",
             svojstva: "",
-            checkbox: false
+            checkbox: false,
+            imeTestcase: ""
         });
     }
 
@@ -208,7 +220,10 @@ class NoviCssZad extends React.Component{
                 <div className="body">
                     <h1 className="pageTitle">Novi CSS testni slučaj</h1>
                     <form>
-                        <h2>Testcase{this.state.brojTestcase}</h2>
+                        <div className="formElement">
+                            <label for="imeTestcase">Ime testcase-a:</label>
+                            <input type="text" className="customTextbox" name="imeTestcase" onChange={this.imeTestcaseChange} value={this.state.imeTestcase} />
+                        </div>
                         <div className="formElement">
                             <label for="imeElementa">Element:</label>
                             <input type="text" className="customTextbox" name="imeElementa" onChange={this.imeElementaChange} value={this.state.imeElementa} />
@@ -232,7 +247,10 @@ class NoviCssZad extends React.Component{
                 <div className="body">
                     <h1 className="pageTitle">Ažuriraj testni slučaj</h1>
                     <form>
-                        <h2>{this.state.prikazStranice}</h2>
+                        <div className="formElement">
+                            <label for="imeTestcase">Ime testcase-a:</label>
+                            <input type="text" className="customTextbox" name="imeTestcase" onChange={this.imeTestcaseChange} value={this.state.imeTestcase} />
+                        </div>
                         <div className="formElement">
                             <label for="imeElementa">Element:</label>
                             <input type="text" className="customTextbox" name="imeElementa" onChange={this.imeElementaChange} value={this.state.imeElementa} />
