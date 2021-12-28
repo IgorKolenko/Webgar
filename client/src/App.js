@@ -5,6 +5,7 @@ import NoviHtmlZad from './components/noviHtmlZad/noviHtmlZad';
 import NoviCssZad from './components/noviCssZad/noviCssZad';
 import PogledZadatka from './components/pogledZadatka/pogledZadatka';
 import AktivniZadaci from './components/aktivniZadaci/aktivniZadaci';
+import Login from './components/login/login';
 import {
   BrowserRouter as Router,
   Switch,
@@ -23,6 +24,7 @@ function App() {
           <Route path="/noviCssZad" exact component={NoviCssZad} />
           <Route path="/zadatak/:taskId" exact component={PogledZadatka} />
           <Route path="/aktivniZadaci" exact component={AktivniZadaci} />
+          <Route path="/login" exact component={Login} />
         </Switch>
       </div>
     </Router>
