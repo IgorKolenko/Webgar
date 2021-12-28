@@ -4,32 +4,63 @@ const db = require('../db');
 const cssTest = require('./cssTesting');
 const jsTester=require('./jsTesting')
 const htmlTester = require('./htmlTesting')
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+// const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
+//Vraca neaktivne zadatke
 router.get('/activeTasks', async function (req,res,next){
     let activeTasks=await db.getActiveTasks();
     res.send(activeTasks);
 });
 
+//Vraca stare zadatke
 router.get('/inactiveTasks',async function(req,res,next){
     let inactiveTasks=db.getInactiveTasks();
     res.send(inactiveTasks)
 })
 
+//Vraca rjesenja za zadatak sa imenima studenata
+router.get('/solutions/task/:taskID', async function(req,res,next){
+    let studentSolution=await db.getAllSolutions(req.params.taskID)
+    //Add student name and surname to task
+    for(let i=0;i<studentSolution.length;i++){
+        let student=await db.getStudent(studentSolution[i].jmbag);
+        studentSolution[i].name=student.imestudent;
+        studentSolution[i].surname=student.prezimestudent
+    }
+    res.send(studentSolution)
+})
+
+// Vraca rjesenje zadatka s imenom studenta i rezultatima
+router.get('/solutions/:solvedTaskID/',async function (req,res,next){
+    let solution=await db.getSolution(req.params.solvedTaskID)
+    //Dodaj studenta
+    let student=await db.getStudent(solution.jmbag);
+    solution.name=student.imestudent;
+    solution.surname=student.prezimestudent
+    //Dodaj rezultate
+    let results=await db.getSolutionResults(req.params.solvedTaskID)
+    let send={
+        "solution":solution,
+        "results":results
+    }
+    res.send(send)
+})
+
+//Vraca sve profesore iz baze
 router.get('/professors', async function (req,res,next){
-    let professors=await db.getProfessors();
+    let professors=await db.getAllProfessors();
     res.send(professors);
 });
 
+//Vraca zadatak iz baze
 router.get('/:taskID', async function (req,res,next){
     let task=await db.getTask(req.params.taskID);
     res.send(task);
 });
 
-
+//Dodaje se rijesenja zadatka u bazu, testira i vracaju rezultati
 router.post('/newSolution',async function(req,res,next){
     //TODO HARDCODED VARIABLES
-    // console.log(JSON.stringify(req.body));
     let file=req.body.fileData;
     let jmbag="0036123456"; // ubuduce req.body.jmbag ?
     let taskID=req.body.zadatakId; // ubuduce req.body.taskID?
@@ -54,33 +85,16 @@ router.post('/newSolution',async function(req,res,next){
     }
     //HTML
     if(taskType==1){
-        // await fetch(hostUrl+'/html/htmlTesting',{
-        //     method: 'POST',
-        //     body: JSON.stringify(params),
-        //     headers: { 'Content-Type': 'application/json' }
-        // })
         await htmlTester.testHTML(taskID,jmbag,solvedTaskID)
     }
     //CSS
     else if (taskType==2){
         console.log("Testiranje css zadatka");
         let res = await cssTest(jmbag, taskID, solvedTaskID);
-        /*
-        await fetch(hostUrl+'/css/cssTesting',{
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(params),
-        })
-        */
        console.log(res);
     }
     //JS
     else if(taskType==3){
-        // await fetch(hostUrl+'/js/jsTesting',{
-        //     method: 'POST',
-        //     body: JSON.stringify(params),
-        //     headers: { 'Content-Type': 'application/json' }
-        // })
         await jsTester.testJS(taskID,jmbag,solvedTaskID)
     }
     // console.log(solvedTaskID)
