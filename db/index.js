@@ -1,23 +1,23 @@
 const {Pool} = require('pg');
 //Local database
 
-// const pool = new Pool({
-//     user: 'postgres',
-//     host: 'localhost',
-//     database: 'projektR',
-//     password: "ferbp",
-//     port: 5432,
-// });
+const pool = new Pool({
+    user: 'postgres',
+    host: 'localhost',
+    database: 'projektR',
+    password: "ferbp",
+    port: 5432,
+});
 
 
 // Remote database
-const pool = new Pool({
-    user: 'projektadmin',
-    host: '161.53.18.24',
-    database: 'WebTest',
-    password: "5tz89rg5489ohizg",
-    port: 5432,
-});
+// const pool = new Pool({
+//     user: 'projektadmin',
+//     host: '161.53.18.24',
+//     database: 'WebTest',
+//     password: "5tz89rg5489ohizg",
+//     port: 5432,
+// });
 
 
 async function getTestcase(idzadatka) {
@@ -178,6 +178,23 @@ async function getStudent(jmbag){
     return res
 }
 
+async function getProfessor(id){
+    let res = await pool.query('SELECT * FROM profesor WHERE idprofesor=$1', [id]).then(
+        value => {
+            return value.rows[0]
+        }
+    ).catch(err => console.log(err))
+    return res
+}
+
+async function getUserByEmail(email){
+    let user=await pool.query('SELECT * FROM "user" WHERE email=$1 LIMIT 1',[email]).then(
+        value => {
+            return value.rows[0]
+        }).catch(err=>{console.log("Get user by email error\n"+err)})
+    return user
+}
+
 module.exports = {
     query: (text, params) => {
         const start = Date.now();
@@ -202,5 +219,7 @@ module.exports = {
     insertTask,
     insertTestcase,
     getAllSolutions,
-    getStudent
+    getStudent,
+    getProfessor,
+    getUserByEmail
 }
