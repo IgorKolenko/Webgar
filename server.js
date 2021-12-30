@@ -10,6 +10,10 @@ const path = require('path');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(session({
+    store: new pgSession({
+        pool: db.pool,
+        tableName: "session"
+    }),
     secret: "nekaTajna",
     resave: false,
     saveUninitialized: false
@@ -18,11 +22,10 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.json({limit: '50mb'}));
 app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(express.static('client/build'));
+
 //Routes
 app.use('/tasks',require('./routes/taskTestcases'))
-// app.use('/css', require('./routes/cssTesting'))
-// app.use('/js',require('./routes/jsTesting'))
-// app.use('/html',require('./routes/htmlTesting'))
+app.use('/auth',require('./routes/authRoute'))
 
 //Ovo je za React rute
 app.get('*', function(req, res){
