@@ -33,5 +33,14 @@ router.post('/login', [body('email').not().isEmpty().isEmail(),
     }
 })
 
+router.get('/logged-in', function(req, res, next){
+    if(req.session.user != undefined){
+        console.log("Role: "+req.session.user.role)
+        res.json({loggedIn: true, role: req.session.user.role});
+    }else{
+        res.json({loggedIn: false, role: ""});
+    }
+})
+
 
 module.exports=router
