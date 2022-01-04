@@ -106,6 +106,41 @@ a:active {
     color: black;
 }
 
+.testcaseTable{
+    width: 95%;
+    margin: auto;
+}
+
+.loginBody{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+    height: 100vh;
+}
+
+.loginDiv{
+    border-radius: 20px;
+    box-shadow: 2px 2px 5px gray;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: white;
+}
+
+.loginDiv h2{
+    text-align: center;
+    font-size: 72px;
+    margin: 50px;
+}
+
+.loginDiv input{
+    outline: 0;
+    border-width: 0 0 2px;
+    font-size: 30px;
+    margin: 30px;
+}
+
 @media only screen and (max-width: 700px) {
     .pageTitle {
         text-align: center;
@@ -113,5 +148,27 @@ a:active {
 
     p {
         text-align: center;
+    }
+
+    .loginDiv h2{
+        font-size: 64px;
+        margin: 20px;
+    }
+    
+    .loginDiv input{
+        font-size: 20px;
+        margin: 20px;
+    }
+}
+
+@media only screen and (max-width: 400px){
+    .loginDiv h2{
+        font-size: 48px;
+        margin: 10px;
+    }
+    
+    .loginDiv input{
+        font-size: 20px;
+        margin: 10px;
     }
 }

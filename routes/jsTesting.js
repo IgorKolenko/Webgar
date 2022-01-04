@@ -9,13 +9,15 @@ async function testFunction(testcase, taskSolution){
     //Format testcase data
     let testcaseData=JSON.parse(testcase.json)
     // Check input for Numbers
-    let rawInput = testcaseData.input.split(',')
+    let testInput=testcaseData.input
+    testInput = testInput.replace(/(\r\n|\n|\r)/gm, "");
+    let rawInput = testInput.split(',')
     rawInput.forEach(function (element, i) {
         if (!isNaN(element)) {
             rawInput[i] = Number(element)
         }
     })
-
+    console.log("INPUT\n"+rawInput)
     // Get file function from taskSolution
     let functionText=taskSolution.file
 
@@ -32,6 +34,8 @@ async function testFunction(testcase, taskSolution){
         // console.log(result)
 
         // Test Result
+        console.log("OUTPUT\n"+result)
+        console.log("EXPECTED\n"+testcaseData.output)
         if (result == testcaseData.output) {
             // Rezultat ispravan
             await db.insertResult(testcase.idtestcase,taskSolution.idriješenizadatak, true)
@@ -47,23 +51,6 @@ async function testFunction(testcase, taskSolution){
         console.log("FAIL")
     }
 }
-
-
-// router.post('/jsTesting', async function (req, res, next) {
-//     let idZadatak=req.body.taskID
-//     let jmbag=req.body.jmbag
-//     let solvedTaskID=req.body.solvedTaskID
-//
-//     let allTestcases=await db.getTestcase(idZadatak)
-//     // let taskSolution = await db.getLastSolution(idZadatak, jmbag)
-//     let taskSolution=await db.getSolution(solvedTaskID)
-//
-//     for(let item of allTestcases){
-//         await testFunction(item,taskSolution)
-//     }
-//
-//     res.json({ok: true});
-// });
 
 async function testJS(taskID,student,solvedTask){
     let idZadatak=taskID

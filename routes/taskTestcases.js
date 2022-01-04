@@ -4,27 +4,63 @@ const db = require('../db');
 const cssTest = require('./cssTesting');
 const jsTester=require('./jsTesting')
 const htmlTester = require('./htmlTesting')
-const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
+// const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
+//Vraca neaktivne zadatke
 router.get('/activeTasks', async function (req,res,next){
     let activeTasks=await db.getActiveTasks();
     res.send(activeTasks);
 });
 
+//Vraca stare zadatke
+router.get('/inactiveTasks',async function(req,res,next){
+    let inactiveTasks=db.getInactiveTasks();
+    res.send(inactiveTasks)
+})
+
+//Vraca rjesenja za zadatak sa imenima studenata
+router.get('/solutions/task/:taskID', async function(req,res,next){
+    let studentSolution=await db.getAllSolutions(req.params.taskID)
+    //Add student name and surname to task
+    for(let i=0;i<studentSolution.length;i++){
+        let student=await db.getStudent(studentSolution[i].jmbag);
+        studentSolution[i].name=student.imestudent;
+        studentSolution[i].surname=student.prezimestudent
+    }
+    res.send(studentSolution)
+})
+
+// Vraca rjesenje zadatka s imenom studenta i rezultatima
+router.get('/solutions/:solvedTaskID/',async function (req,res,next){
+    let solution=await db.getSolution(req.params.solvedTaskID)
+    //Dodaj studenta
+    let student=await db.getStudent(solution.jmbag);
+    solution.name=student.imestudent;
+    solution.surname=student.prezimestudent
+    //Dodaj rezultate
+    let results=await db.getSolutionResults(req.params.solvedTaskID)
+    let send={
+        "solution":solution,
+        "results":results
+    }
+    res.send(send)
+})
+
+//Vraca sve profesore iz baze
 router.get('/professors', async function (req,res,next){
-    let professors=await db.getProfessors();
+    let professors=await db.getAllProfessors();
     res.send(professors);
 });
 
+//Vraca zadatak iz baze
 router.get('/:taskID', async function (req,res,next){
     let task=await db.getTask(req.params.taskID);
     res.send(task);
 });
 
-
+//Dodaje se rijesenja zadatka u bazu, testira i vracaju rezultati
 router.post('/newSolution',async function(req,res,next){
     //TODO HARDCODED VARIABLES
-    console.log(JSON.stringify(req.body));
     let file=req.body.fileData;
     let jmbag="0036123456"; // ubuduce req.body.jmbag ?
     let taskID=req.body.zadatakId; // ubuduce req.body.taskID?
@@ -49,39 +85,27 @@ router.post('/newSolution',async function(req,res,next){
     }
     //HTML
     if(taskType==1){
-        // await fetch(hostUrl+'/html/htmlTesting',{
-        //     method: 'POST',
-        //     body: JSON.stringify(params),
-        //     headers: { 'Content-Type': 'application/json' }
-        // })
         await htmlTester.testHTML(taskID,jmbag,solvedTaskID)
     }
     //CSS
     else if (taskType==2){
         console.log("Testiranje css zadatka");
         let res = await cssTest(jmbag, taskID, solvedTaskID);
-        /*
-        await fetch(hostUrl+'/css/cssTesting',{
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(params),
-        })
-        */
        console.log(res);
     }
     //JS
     else if(taskType==3){
-        // await fetch(hostUrl+'/js/jsTesting',{
-        //     method: 'POST',
-        //     body: JSON.stringify(params),
-        //     headers: { 'Content-Type': 'application/json' }
-        // })
         await jsTester.testJS(taskID,jmbag,solvedTaskID)
     }
     // console.log(solvedTaskID)
     let testcaseResults=await db.getSolutionResults(solvedTaskID)
+    let testcases = await db.getTestcase(taskID)
+    let send = {
+        "results": testcaseResults,
+        "testcases": testcases
+    }
     // res.sendStatus(200)
-    res.send(testcaseResults)
+    res.send(send);
 });
 
 
@@ -94,29 +118,18 @@ router.post('/addTask',async function (req,res,next){
     // Insert Task into database
     //TODO Currently Hardcoded profesorID
     let professorID = 1;
-    let result=await db.query('INSERT INTO zadatak (imeZadatak,opisZadatak,idProfesor,idVrsta,active,datum) VALUES($1,$2,$3,$4,$5,$6) RETURNING idzadatak',
-        [imeZadatak, opisZadatak, professorID, vrstaZadatak, true, new Date()]).catch(
-        err=>{
-            console.log(err)
-            res.sendStatus(500)
-        }
-    );
+    let taskID = await db.insertTask(imeZadatak,opisZadatak,professorID,vrstaZadatak,true,new Date())
 
     // Insert testcase into database
-    console.log("res: "+JSON.stringify(result));
-    console.log("TasksID: "+JSON.stringify(result.rows[0].idzadatak));
-    console.log("Testcases: "+JSON.stringify(testcases));
+    // console.log("res: "+JSON.stringify(result));
+    // console.log("TasksID: "+JSON.stringify(taskID));
+    // console.log("Testcases: "+JSON.stringify(testcases));
     for (const testcase of testcases) {
         //Body ima vrstaTestCase,imeTestCase,imeFunkcije,input,output
         console.log("Spremanje u bazu testcase: "+testcase.imeTestCase);
         //let testCaseJSON=JSON.stringify({funcName: testcase.JSON.imeFunkcije, input: testcase.JSON.input, output: testcase.JSON.output})
-        await db.query(`INSERT INTO testcase (imeTestCase,JSON,vrstaTestCase,idZadatak)
-                            VALUES ('${testcase.imeTestCase}','${JSON.stringify(testcase.JSON)}','${testcase.vrstaTestCase}',${result.rows[0].idzadatak})`).catch(
-                                err=>{
-                                    console.log(err)
-                                    res.sendStatus(500)
-                                }
-        );
+        await db.insertTestcase(testcase.imeTestCase,JSON.stringify(testcase.JSON),testcase.vrstaTestCase,taskID)
+
     }
     res.json({ok:true})
 });
