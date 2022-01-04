@@ -1,7 +1,6 @@
 import React from 'react';
 import '../mainElements.css';
 import '../formElements.css';
-import { faBaby } from '@fortawesome/free-solid-svg-icons';
 
 class AktivniZadaci extends React.Component{
 
@@ -9,8 +8,10 @@ class AktivniZadaci extends React.Component{
         super(props);
         this.state = {
             zadaci: [],
-            profesori: []
+            profesori: [],
+            selectedOption: 0
         }
+        this.handleChange = this.handleChange.bind(this);
     }
 
     componentDidMount(){
@@ -34,11 +35,26 @@ class AktivniZadaci extends React.Component{
         }
     }
 
+    handleChange(event) {
+        this.setState({
+            selectedOption: event.target.value
+        });
+      }
+
     render(){
         console.log(this.state.zadaci)
         console.log(this.state.profesori)
         return(
             <div className='body'>
+                <form>
+                    <select onChange={this.handleChange}>
+                        <option value="" disabled selected hidden>Select</option>
+                        <option value="1">HTML</option>
+                        <option value="2">CSS</option>
+                        <option value="3">Javascript</option>
+                    </select>
+                </form>
+
                 <div className='container-tasks'>
                     {this.state.zadaci.map((zadatak) => {
                         let date = new Date(zadatak.datum)
@@ -46,32 +62,65 @@ class AktivniZadaci extends React.Component{
 
                         let profesor = this.vratiProfesora(zadatak.idprofesor)
 
-                        return(
-                            <a href={'../zadatak/'+zadatak.idzadatak}>
-                            <div className='container-task'>
-                                <div className='taskname'>
-                                    <h3>{profesor.imeprofesor + " " + profesor.prezimeprofesor}</h3>
-                                    <h2>{zadatak.imezadatak}</h2>
-                                </div>
-                                <div>
-                                    <h3>Vrsta zadatka</h3>
-                                    {zadatak.idvrsta == 1 ? (
-                                        <h2>HTML</h2>
-                                    ) : (
-                                        zadatak.idvrsta == 2 ? (
-                                            <h2>CSS</h2>
+                        let vrsta = this.state.selectedOption
+                        
+                        if(vrsta == 0) {
+                            return(
+                                <a href={'../zadatak/'+zadatak.idzadatak}>
+                                <div className='container-task'>
+                                    <div className='taskname'>
+                                        <h3>{profesor.imeprofesor + " " + profesor.prezimeprofesor}</h3>
+                                        <h2>{zadatak.imezadatak}</h2>
+                                    </div>
+                                    <div>
+                                        <h3>Vrsta zadatka</h3>
+                                        {zadatak.idvrsta == 1 ? (
+                                            <h2>HTML</h2>
                                         ) : (
-                                            <h2>JS</h2>
-                                        )
-                                    )}
+                                            zadatak.idvrsta == 2 ? (
+                                                <h2>CSS</h2>
+                                            ) : (
+                                                <h2>JS</h2>
+                                            )
+                                        )}
+                                    </div>
+                                    <div>
+                                        <h3>Datum nastanka</h3>
+                                        <h2>{zadatak.datum}</h2>
+                                    </div>
                                 </div>
-                                <div>
-                                    <h3>Datum nastanka</h3>
-                                    <h2>{zadatak.datum}</h2>
+                                </a>
+                            )
+                        } else {
+                            if(zadatak.idvrsta == vrsta) {
+                                return(
+                                <a href={'../zadatak/'+zadatak.idzadatak}>
+                                <div className='container-task'>
+                                    <div className='taskname'>
+                                        <h3>{profesor.imeprofesor + " " + profesor.prezimeprofesor}</h3>
+                                        <h2>{zadatak.imezadatak}</h2>
+                                    </div>
+                                    <div>
+                                        <h3>Vrsta zadatka</h3>
+                                        {zadatak.idvrsta == 1 ? (
+                                            <h2>HTML</h2>
+                                        ) : (
+                                            zadatak.idvrsta == 2 ? (
+                                                <h2>CSS</h2>
+                                            ) : (
+                                                <h2>JS</h2>
+                                            )
+                                        )}
+                                    </div>
+                                    <div>
+                                        <h3>Datum nastanka</h3>
+                                        <h2>{zadatak.datum}</h2>
+                                    </div>
                                 </div>
-                            </div>
-                            </a>
-                        )
+                                </a>
+                            )
+                            }
+                        }
                     })}
                 </div>
             </div>
