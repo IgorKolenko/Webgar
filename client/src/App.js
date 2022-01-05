@@ -11,6 +11,7 @@ import ManageAktivni from './components/manageAktivni/manageAktivni';
 import ManageStari from './components/manageStari/manageStari';
 import PogledZadatkaProfesor from './components/pogledZadatkaProfesor/pogledZadatkaProfesor';
 import PogledRezultata from './components/pogledRezultata/pogledRezultata';
+import Register from './components/register/register';
 import {
   BrowserRouter as Router,
   Switch,
@@ -59,6 +60,9 @@ class App extends React.Component {
             <Switch>
               <Route exact path="/">
                 {this.state.loggedIn == false ? <Login /> : this.state.role == "profesor" ? <Redirect to="/manageAktivni" /> : <Redirect to="/aktivniZadaci" />}
+              </Route>
+              <Route exact path="/register">
+                {this.state.loggedIn == false ? <Register /> : this.state.role == "profesor" ? <Redirect to="/manageAktivni" /> : <Redirect to="/aktivniZadaci" />}
               </Route>
               <Route exact path="/noviJsZad">
                 {this.state.loggedIn == true && this.state.role == "profesor" ? <NoviJsZad /> : <Redirect to="/" />}

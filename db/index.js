@@ -1,6 +1,7 @@
 const {Pool} = require('pg');
 //Local database
 
+/*
 const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
@@ -8,16 +9,17 @@ const pool = new Pool({
     password: "bazepodataka",
     port: 5432,
 });
+*/
 
 
 // Remote database
-// const pool = new Pool({
-//     user: 'projektadmin',
-//     host: '161.53.18.24',
-//     database: 'WebTest',
-//     password: "5tz89rg5489ohizg",
-//     port: 5432,
-// });
+ const pool = new Pool({
+     user: 'projektadmin',
+     host: '161.53.18.24',
+     database: 'WebTest',
+     password: "5tz89rg5489ohizg",
+     port: 5432,
+ });
 
 
 async function getTestcase(idzadatka) {
