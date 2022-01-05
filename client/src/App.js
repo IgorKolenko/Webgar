@@ -66,7 +66,7 @@ class App extends React.Component {
                 {this.state.loggedIn == true && this.state.role == "profesor" ? <NoviCssZad /> : <Redirect to="/" />}
               </Route>
               <Route exact path="/zadatak/:taskId">
-                {this.state.loggedIn == true && this.state.role == "student" ? <PogledZadatka /> : <Redirect to="/" />}
+                {this.state.loggedIn == true && this.state.role == "student" ? (props) => <PogledZadatka {...props}/> : <Redirect to="/" />}
               </Route>
               <Route exact path="/aktivniZadaci">
                 {this.state.loggedIn == true && this.state.role == "student" ? <AktivniZadaci /> : <Redirect to="/" />}

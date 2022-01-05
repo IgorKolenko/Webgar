@@ -16,7 +16,7 @@ app.use(session({
     }),
     secret: "nekaTajna",
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: true
 }));
 var bodyParser = require('body-parser');
 app.use(bodyParser.json({limit: '50mb'}));
