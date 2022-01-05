@@ -85,9 +85,9 @@ async function getAllSolutions(taskID) {
     return res
 }
 
-async function insertSolution(file, uploaddate, jmbag, taskID) {
-    let res = await pool.query('INSERT INTO riješenizadatak (file,uploaddate,jmbag,idzadatak) VALUES ($1,$2,$3,$4) RETURNING idriješenizadatak',
-        [file, uploaddate, jmbag, taskID]).then(
+async function insertSolution(file, uploaddate, jmbag, taskID, filename) {
+    let res = await pool.query('INSERT INTO riješenizadatak (file,uploaddate,jmbag,idzadatak,filename) VALUES ($1,$2,$3,$4,$5) RETURNING idriješenizadatak',
+        [file, uploaddate, jmbag, taskID, filename]).then(
         value => {
             return value.rows[0].idriješenizadatak
         }

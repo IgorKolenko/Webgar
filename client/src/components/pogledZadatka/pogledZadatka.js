@@ -61,7 +61,8 @@ class PogledZadatka extends React.Component{
         let params = {
             fileData: this.state.fileData,
             zadatakId: this.state.zadatakId,
-            vrstaZadatak: this.state.vrstaZadatak
+            vrstaZadatak: this.state.vrstaZadatak,
+            fileName: this.state.file.name
         }
         console.log(JSON.stringify(params));
         fetch('/tasks/newSolution', {

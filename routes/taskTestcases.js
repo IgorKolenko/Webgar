@@ -88,9 +88,9 @@ router.post('/newSolution',async function(req,res,next){
     let jmbag="0036123456"; // ubuduce req.body.jmbag ?
     let taskID=req.body.zadatakId; // ubuduce req.body.taskID?
     let uploaddate=new Date();
+    let filename=req.body.fileName;
 
-
-    let solvedTaskID=await db.insertSolution(file,uploaddate,jmbag,taskID).catch(err=>{
+    let solvedTaskID=await db.insertSolution(file,uploaddate,jmbag,taskID,filename).catch(err=>{
         console.log(err)
         res.sendStatus(500)
     });
