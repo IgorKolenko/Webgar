@@ -6,15 +6,25 @@ const jsTester=require('./jsTesting')
 const htmlTester = require('./htmlTesting')
 // const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 
-//Vraca neaktivne zadatke
+//Vraca aktivne zadatke s imenima profesora
 router.get('/activeTasks', async function (req,res,next){
     let activeTasks=await db.getActiveTasks();
+    for(let i=0;i<activeTasks.length;i++){
+        let professor=await db.getProfessor(activeTasks[i].idprofesor);
+        activeTasks[i].name=professor.imeprofesor;
+        activeTasks[i].surname=professor.prezimeprofesor
+    }
     res.send(activeTasks);
 });
 
-//Vraca stare zadatke
+//Vraca stare zadatke s imenima profesora
 router.get('/inactiveTasks',async function(req,res,next){
     let inactiveTasks=await db.getInactiveTasks();
+    for(let i=0;i<inactiveTasks.length;i++){
+        let professor=await db.getProfessor(inactiveTasks[i].idprofesor);
+        inactiveTasks[i].name=professor.imeprofesor;
+        inactiveTasks[i].surname=professor.prezimeprofesor
+    }
     res.send(inactiveTasks)
 })
 

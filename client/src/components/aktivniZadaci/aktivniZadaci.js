@@ -8,7 +8,6 @@ class AktivniZadaci extends React.Component{
         super(props);
         this.state = {
             zadaci: [],
-            profesori: [],
             selectedOption: 0,
             wordEntered: ""
         }
@@ -17,24 +16,13 @@ class AktivniZadaci extends React.Component{
     }
 
     componentDidMount(){
-        Promise.all([fetch('/tasks/activeTasks'), fetch('/tasks/professors')])
-            .then(([res1, res2]) => { 
-                return Promise.all([res1.json(), res2.json()]) 
-        })
-            .then(([res1, res2]) => {
+        fetch('/tasks/activeTasks')
+            .then(res => res.json())
+            .then(res => {
                 this.setState({
-                    zadaci: res1,
-                    profesori: res2
+                    zadaci: res   
                 })
-        });
-    }
-
-    vratiProfesora(idprofesor) {
-        for(var profesor of this.state.profesori) {
-            if(profesor.idprofesor == idprofesor) {
-                return profesor
-            }
-        }
+        })
     }
 
     handleSelect(event) {
@@ -65,7 +53,6 @@ class AktivniZadaci extends React.Component{
 
     render(){
         console.log(this.state.zadaci)
-        console.log(this.state.profesori)
         console.log(this.state.wordEntered)
         return(
             <div className='body'>
@@ -90,7 +77,6 @@ class AktivniZadaci extends React.Component{
                 <div className='container-tasks'>
                     {this.filterTasks().map((zadatak) => {
                         let datum = (new Date(zadatak.datum)).toLocaleDateString()
-                        let profesor = this.vratiProfesora(zadatak.idprofesor)
                         let vrsta = this.state.selectedOption
                         
                         if(vrsta == 0 || zadatak.idvrsta == vrsta) {
@@ -98,7 +84,7 @@ class AktivniZadaci extends React.Component{
                                 <a href={'../zadatak/'+zadatak.idzadatak}>
                                 <div className='container-task'>
                                     <div className='taskname'>
-                                        <h3>{profesor.imeprofesor + " " + profesor.prezimeprofesor}</h3>
+                                        <h3>{zadatak.name + " " + zadatak.surname}</h3>
                                         <h2>{zadatak.imezadatak}</h2>
                                     </div>
                                     <div>
