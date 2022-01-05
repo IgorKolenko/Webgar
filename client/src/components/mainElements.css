@@ -106,12 +106,12 @@ a:active {
     color: black;
 }
 
-.testcaseTable{
+.testcaseTable {
     width: 95%;
     margin: auto;
 }
 
-.loginBody{
+.loginBody {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -119,7 +119,7 @@ a:active {
     height: 100vh;
 }
 
-.loginDiv{
+.loginDiv {
     border-radius: 20px;
     box-shadow: 2px 2px 5px gray;
     display: flex;
@@ -128,13 +128,13 @@ a:active {
     background-color: white;
 }
 
-.loginDiv h2{
+.loginDiv h2 {
     text-align: center;
     font-size: 72px;
     margin: 50px;
 }
 
-.loginDiv input{
+.loginDiv input {
     outline: 0;
     border-width: 0 0 2px;
     font-size: 30px;
@@ -150,24 +150,24 @@ a:active {
         text-align: center;
     }
 
-    .loginDiv h2{
+    .loginDiv h2 {
         font-size: 64px;
         margin: 20px;
     }
-    
-    .loginDiv input{
+
+    .loginDiv input {
         font-size: 20px;
         margin: 20px;
     }
 }
 
-@media only screen and (max-width: 400px){
-    .loginDiv h2{
+@media only screen and (max-width: 400px) {
+    .loginDiv h2 {
         font-size: 48px;
         margin: 10px;
     }
-    
-    .loginDiv input{
+
+    .loginDiv input {
         font-size: 20px;
         margin: 10px;
     }

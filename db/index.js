@@ -5,7 +5,7 @@ const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
     database: 'projektR',
-    password: "bayepodataka",
+    password: "bazepodataka",
     port: 5432,
 });
 
@@ -152,13 +152,6 @@ async function insertTestcase(imeTestCase, JSON, vrstaTestCase, taskID) {
         })
     return res
 }
-
-// async function getProfessor(idprofesor){
-//     let res=await pool.query('SELECT * FROM profesor WHERE idprofesor=$1',[idprofesor]).then(
-//         value => {return value.rows[0]}
-//     ).catch(err=>console.log(err))
-//     return res
-// }
 
 async function getAllProfessors() {
     let res = await pool.query('SELECT * FROM profesor', []).then(

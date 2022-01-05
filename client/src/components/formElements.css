@@ -1,12 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=PT+Sans+Narrow:wght@400;700&family=PT+Sans:wght@400;700&display=swap');
 
-label{
+label {
     font-family: 'PT Sans', sans-serif;
     font-weight: 400;
     font-size: 24px;
 }
 
-table{
+table {
     background-color: white;
     width: 100%;
     font-family: 'PT Sans', sans-serif;
@@ -14,28 +14,28 @@ table{
     font-size: 24px;
 }
 
-th{
+th {
     padding: 10px;
 }
 
-.titleTr{
+.titleTr {
     background-color: lightgray;
 }
 
-.formElement{
+.formElement {
     margin: 10px;
     text-align: start;
     display: flex;
     flex-direction: column;
 }
 
-.buttonField{
+.buttonField {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
 }
 
-.delBtn{
+.delBtn {
     width: 40px;
     height: 40px;
     border-radius: 10px;
@@ -46,11 +46,11 @@ th{
     transition: 0.2s;
 }
 
-.delBtn:hover{
+.delBtn:hover {
     background-color: #e82020;
 }
 
-.editBtn{
+.editBtn {
     width: 40px;
     height: 40px;
     border-radius: 10px;
@@ -61,29 +61,29 @@ th{
     transition: 0.2s;
 }
 
-.editBtn:hover{
+.editBtn:hover {
     background-color: #344feb;
 }
 
-.formBtnContainer{
+.formBtnContainer {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
 }
 
-.formBtnContaine2{
+.formBtnContaine2 {
     display: flex;
     flex-direction: row;
     justify-content: center;
 }
 
-.verticalBtnContainer{
+.verticalBtnContainer {
     display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
-.customTextbox{
+.customTextbox {
     width: 60%;
     height: 35px;
     border-radius: 5px;
@@ -91,7 +91,7 @@ th{
     border: 2px solid black;
 }
 
-.customTextarea{
+.customTextarea {
     width: 60%;
     height: 100px;
     border-radius: 5px;
@@ -99,27 +99,58 @@ th{
     border: 2px solid black;
 }
 
-.customCheckbox{
+.customCheckbox {
     width: 30px;
     height: 30px;
     border: 2px solid black;
 }
 
-@media only screen and (max-width: 700px){
-    .customTextarea{
+.filterContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    margin: 30px;
+}
+
+.filterContainer label {
+    margin-right: 10px;
+}
+
+.filterContainer input {
+    margin-right: 50px;
+    width: 200px;
+    font-family: 'PT Sans', sans-serif;
+    font-weight: 400;
+    font-size: 20px;
+}
+
+.filterContainer select {
+    color: white;
+    background-color: #E05D5D;
+    font-family: 'PT Sans', sans-serif;
+    font-weight: 400;
+    font-size: 20px;
+    text-align: center;
+}
+
+.filterContainer option:hover {
+    background-color: brown;
+}
+
+@media only screen and (max-width: 700px) {
+    .customTextarea {
         width: 100%;
     }
 
-    .customTextbox{
+    .customTextbox {
         width: 100%;
     }
 
-    table{
+    table {
         font-size: 18px;
     }
 
-    th{
+    th {
         padding: 5px;
     }
 }
-
