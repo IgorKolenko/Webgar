@@ -9,6 +9,7 @@ import AktivniZadaci from './components/aktivniZadaci/aktivniZadaci';
 import Login from './components/login/login';
 import ManageAktivni from './components/manageAktivni/manageAktivni';
 import ManageStari from './components/manageStari/manageStari';
+import PogledZadatkaProfesor from './components/pogledZadatkaProfesor/pogledZadatkaProfesor';
 import {
   BrowserRouter as Router,
   Switch,
@@ -78,6 +79,9 @@ class App extends React.Component {
               </Route>
               <Route exact path="/manageStari">
                 {this.state.loggedIn == true && this.state.role == "profesor" ? <ManageStari /> : <Redirect to="/" />}
+              </Route>
+              <Route exact path="/rezultati/:taskId">
+                {this.state.loggedIn == true && this.state.role == "profesor" ? (props) => <PogledZadatkaProfesor {...props}/> : <Redirect to="/" />}
               </Route>
             </Switch>
           </div>

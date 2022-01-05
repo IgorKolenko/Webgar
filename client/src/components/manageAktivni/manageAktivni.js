@@ -90,6 +90,7 @@ class ManageAktivni extends React.Component{
                         
                         if(vrsta == 0 || zadatak.idvrsta == vrsta) {
                             return(
+                                <a href={'../rezultati/'+zadatak.idzadatak}>
                                 <div className='container-task'>
                                     <div className='taskname'>
                                         <h3>{zadatak.name + " " + zadatak.surname}</h3>
@@ -113,6 +114,7 @@ class ManageAktivni extends React.Component{
                                     </div>
                                     <button className="delBtn" onClick={() => this.izbrisiZadatak(zadatak.idzadatak)}><FontAwesomeIcon className="icon" icon={faTrash} /></button>
                                 </div>
+                                </a>
                             )
                         }
                     })}

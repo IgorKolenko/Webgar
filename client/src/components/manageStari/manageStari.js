@@ -90,6 +90,7 @@ class ManageStari extends React.Component{
                         
                         if(vrsta == 0 || zadatak.idvrsta == vrsta) {
                             return(
+                                <a href={'../rezultati/'+zadatak.idzadatak}>
                                 <div className='container-task'>
                                     <div className='taskname'>
                                         <h3>{zadatak.name + " " + zadatak.surname}</h3>
@@ -112,6 +113,7 @@ class ManageStari extends React.Component{
                                         <h2>{datum}</h2>
                                     </div>
                                 </div>
+                                </a>
                             )
                         }
                     })}
