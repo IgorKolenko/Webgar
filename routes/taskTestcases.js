@@ -83,9 +83,9 @@ router.get('/:taskID', async function (req,res,next){
 
 //Dodaje se rijesenja zadatka u bazu, testira i vracaju rezultati
 router.post('/newSolution',async function(req,res,next){
-    //TODO HARDCODED VARIABLES
     let file=req.body.fileData;
-    let jmbag="0036123456"; // ubuduce req.body.jmbag ?
+    // let jmbag="0036123456"; // ubuduce req.body.jmbag ?
+    let jmbag=req.session.user.jmbag
     let taskID=req.body.zadatakId; // ubuduce req.body.taskID?
     let uploaddate=new Date();
     let filename=req.body.fileName;
@@ -139,8 +139,7 @@ router.post('/addTask',async function (req,res,next){
     const{imeZadatak,opisZadatak,vrstaZadatak, testcases}=req.body
 
     // Insert Task into database
-    //TODO Currently Hardcoded profesorID
-    let professorID = 1;
+    let professorID = req.session.user.profID
     let taskID = await db.insertTask(imeZadatak,opisZadatak,professorID,vrstaZadatak,true,new Date())
 
     // Insert testcase into database
