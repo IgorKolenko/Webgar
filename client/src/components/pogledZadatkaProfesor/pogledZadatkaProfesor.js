@@ -48,6 +48,7 @@ class PogledZadatkaProfesor extends React.Component{
                         let datum = (new Date(solution.uploaddate)).toLocaleDateString()
                         
                         return(
+                            <a href={'../rezultat/'+solution.idriješenizadatak}>
                             <div className='container-task'>
                                 <div className='taskname'>
                                     <h3>Ime i prezime</h3>
@@ -62,6 +63,7 @@ class PogledZadatkaProfesor extends React.Component{
                                     <h2>{datum}</h2>
                                 </div>
                             </div>
+                            </a>
                         )
                     })}
                 </div>

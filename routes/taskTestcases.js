@@ -9,6 +9,7 @@ const htmlTester = require('./htmlTesting')
 //Vraca aktivne zadatke s imenima profesora
 router.get('/activeTasks', async function (req,res,next){
     let activeTasks=await db.getActiveTasks();
+    //Add professor name and surname to task
     for(let i=0;i<activeTasks.length;i++){
         let professor=await db.getProfessor(activeTasks[i].idprofesor);
         activeTasks[i].name=professor.imeprofesor;
@@ -20,6 +21,7 @@ router.get('/activeTasks', async function (req,res,next){
 //Vraca stare zadatke s imenima profesora
 router.get('/inactiveTasks',async function(req,res,next){
     let inactiveTasks=await db.getInactiveTasks();
+    //Add professor name and surname to task
     for(let i=0;i<inactiveTasks.length;i++){
         let professor=await db.getProfessor(inactiveTasks[i].idprofesor);
         inactiveTasks[i].name=professor.imeprofesor;
@@ -55,6 +57,11 @@ router.get('/solutions/:solvedTaskID/',async function (req,res,next){
     solution.surname=student.prezimestudent
     //Dodaj rezultate
     let results=await db.getSolutionResults(req.params.solvedTaskID)
+    //Dodaj imena testcase-ova
+    for(let i=0;i<results.length;i++){
+        let testcase=await db.getTestcaseById(results[i].idtestcase);
+        results[i].name=testcase.imetestcase;
+    }
     let send={
         "solution":solution,
         "results":results

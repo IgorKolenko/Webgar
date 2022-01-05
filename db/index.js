@@ -32,6 +32,18 @@ async function getTestcase(idzadatka) {
     return res
 }
 
+async function getTestcaseById(idtestcase) {
+    let res = await pool.query('SELECT * FROM testcase WHERE idtestcase=$1', [idtestcase]).then(
+        value => {
+            return value.rows[0]
+        }
+    ).catch(err => {
+        console.log(err)
+    })
+
+    return res
+}
+
 async function getTask(taskID) {
     let res = await pool.query('SELECT * FROM zadatak WHERE idzadatak=$1', [taskID]).then(
         value => {
@@ -226,5 +238,6 @@ module.exports = {
     getStudent,
     getProfessor,
     getUserByEmail,
-    deactivateTask
+    deactivateTask,
+    getTestcaseById
 }
