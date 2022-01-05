@@ -82,6 +82,10 @@ p {
     text-align: start;
 }
 
+.container-task:hover {
+    cursor: pointer;
+}
+
 .taskname {
     width: 40%;
 }

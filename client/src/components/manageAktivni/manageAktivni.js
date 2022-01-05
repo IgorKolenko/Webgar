@@ -53,7 +53,8 @@ class ManageAktivni extends React.Component{
         })
     }
 
-    izbrisiZadatak(idzadatak) {
+    izbrisiZadatak(e, idzadatak) {
+        e.stopPropagation()
         fetch('/tasks/deactivateTask/'+idzadatak)
         window.location.reload(true);
     }
@@ -90,8 +91,8 @@ class ManageAktivni extends React.Component{
                         
                         if(vrsta == 0 || zadatak.idvrsta == vrsta) {
                             return(
-                                <a href={'../rezultati/'+zadatak.idzadatak}>
-                                <div className='container-task'>
+                                
+                                <div className='container-task' onClick={() => window.location.href='../rezultati/'+zadatak.idzadatak}>
                                     <div className='taskname'>
                                         <h3>{zadatak.name + " " + zadatak.surname}</h3>
                                         <h2>{zadatak.imezadatak}</h2>
@@ -112,9 +113,9 @@ class ManageAktivni extends React.Component{
                                         <h3>Datum nastanka</h3>
                                         <h2>{datum}</h2>
                                     </div>
-                                    <button className="delBtn" onClick={() => this.izbrisiZadatak(zadatak.idzadatak)}><FontAwesomeIcon className="icon" icon={faTrash} /></button>
+                                    <button className="delBtn" onClick={(e) => this.izbrisiZadatak(e, zadatak.idzadatak)}><FontAwesomeIcon className="icon" icon={faTrash} /></button>
                                 </div>
-                                </a>
+                                
                             )
                         }
                     })}
