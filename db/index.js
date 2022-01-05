@@ -188,6 +188,17 @@ async function getUserByEmail(email){
     return user
 }
 
+async function deactivateTask(taskID) {
+    let res = await pool.query('UPDATE zadatak SET active=false WHERE idzadatak=$1;', [taskID]).then(
+        value => {
+            return value.rows[0]
+        }
+    ).catch(err => {
+        console.log(err)
+    })
+    return res
+}
+
 module.exports = {
     query: (text, params) => {
         const start = Date.now();
@@ -214,5 +225,6 @@ module.exports = {
     getAllSolutions,
     getStudent,
     getProfessor,
-    getUserByEmail
+    getUserByEmail,
+    deactivateTask
 }

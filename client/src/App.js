@@ -7,6 +7,8 @@ import NoviCssZad from './components/noviCssZad/noviCssZad';
 import PogledZadatka from './components/pogledZadatka/pogledZadatka';
 import AktivniZadaci from './components/aktivniZadaci/aktivniZadaci';
 import Login from './components/login/login';
+import ManageAktivni from './components/manageAktivni/manageAktivni';
+import ManageStari from './components/manageStari/manageStari';
 import {
   BrowserRouter as Router,
   Switch,
@@ -72,7 +74,10 @@ class App extends React.Component {
                 {this.state.loggedIn == true && this.state.role == "student" ? <AktivniZadaci /> : <Redirect to="/" />}
               </Route>
               <Route exact path="/manageAktivni">
-                {this.state.loggedIn == true && this.state.role == "profesor" ? <p>Manage aktivni placeholder</p> : <Redirect to="/" />}
+                {this.state.loggedIn == true && this.state.role == "profesor" ? <ManageAktivni /> : <Redirect to="/" />}
+              </Route>
+              <Route exact path="/manageStari">
+                {this.state.loggedIn == true && this.state.role == "profesor" ? <ManageStari /> : <Redirect to="/" />}
               </Route>
             </Switch>
           </div>

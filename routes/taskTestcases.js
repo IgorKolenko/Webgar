@@ -14,9 +14,15 @@ router.get('/activeTasks', async function (req,res,next){
 
 //Vraca stare zadatke
 router.get('/inactiveTasks',async function(req,res,next){
-    let inactiveTasks=db.getInactiveTasks();
+    let inactiveTasks=await db.getInactiveTasks();
     res.send(inactiveTasks)
 })
+
+//Deaktivira zadatak
+router.get('/deactivateTask/:taskID',async function (req,res,next){
+    let task=await db.deactivateTask(req.params.taskID);
+    res.send(task);
+});
 
 //Vraca rjesenja za zadatak sa imenima studenata
 router.get('/solutions/task/:taskID', async function(req,res,next){
