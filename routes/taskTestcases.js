@@ -36,6 +36,12 @@ router.get('/deactivateTask/:taskID',async function (req,res,next){
     res.send(task);
 });
 
+//Vraca kod rjesenja
+router.get('/solutionCode/:taskID',async function (req,res,next){
+    let task=await db.getSolution(req.params.taskID);
+    res.send(task.file);
+})
+
 //Vraca rjesenja za zadatak sa imenima studenata
 router.get('/solutions/task/:taskID', async function(req,res,next){
     let studentSolution=await db.getAllSolutions(req.params.taskID)
