@@ -46,6 +46,7 @@ class Login extends React.Component{
                     <input type="email" onChange={this.onEmailChange} placeholder='Email adresa' required/>
                     <input type="password" onChange={this.onPasswordChange} placeholder='Lozinka' required/>
                     <button className='customBtn' onClick={this.sendLogin}>Prijavite se</button>
+                    <a href="/register" className='customLink'>Registracija</a>
                 </div>
             </div>
         );

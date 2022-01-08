@@ -88,10 +88,12 @@ class PogledZadatka extends React.Component{
         let count = 0;
         return(
             <div className='body'>
-                <h1 className="pageTitle">Ime zadatka</h1>
-                <p>{this.state.imeZadatak}</p>
+                <div className='onSameLine'>
+                    <h1 className="pageTitle onSameLine">Ime zadatka: </h1>
+                    <p className='onSameLine'>{this.state.imeZadatak}</p>
+                </div>
                 <br />
-                <h1 className="pageTitle">Opis zadatka</h1>
+                <h1 className="pageTitle">Opis zadatka:</h1>
                 <p>{this.state.opisZadatak}</p>
                 <div className='fileDiv'>
                     <label className='customBtn'>

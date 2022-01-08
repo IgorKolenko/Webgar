@@ -149,6 +149,18 @@ a:active {
     margin: 30px;
 }
 
+.customLink{
+    color: #ff9700 !important;
+    font-size: 24px;
+    margin: 10px;
+}
+
+.onSameLine{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
 @media only screen and (max-width: 700px) {
     .pageTitle {
         text-align: center;
@@ -166,6 +178,10 @@ a:active {
     .loginDiv input {
         font-size: 20px;
         margin: 20px;
+    }
+
+    .onSameLine{
+        flex-direction: column;
     }
 }
 
