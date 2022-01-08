@@ -39,7 +39,7 @@ router.get('/deactivateTask/:taskID',async function (req,res,next){
 //Vraca kod rjesenja
 router.get('/solutionCode/:taskID',async function (req,res,next){
     let task=await db.getSolution(req.params.taskID);
-    res.send(task.file);
+    res.status(200).attachment(task.filename).send(task.file)
 })
 
 //Vraca rjesenja za zadatak sa imenima studenata
