@@ -11,8 +11,25 @@ module.exports=class User{
         this.lastName=lastName
     }
 
-    verifyPassword(password){
-        return this.password ? this.password == password : false
+    async saveUser(){
+        await db.pool.query('INSERT INTO "user"  (email,password,role,idprofesor,jmbag) VALUES ($1,$2,$3,$4,$5)',
+            [this.email,this.password,this.role,this.profID,this.jmbag])
+            .catch(err=>{
+                console.log("Insert User error\n"+err)
+            });
+    }
+
+    async insertStudent(){
+        await db.pool.query('INSERT INTO student (jmbag, imestudent, prezimestudent) VALUES($1,$2,$3)',
+            [this.jmbag,this.firstName,this.lastName])
+            .catch(err=>{
+                console.log("Insert student error\n"+err);
+            })
+    }
+
+    async saveStudent(){
+        await this.insertStudent()
+        await this.saveUser()
     }
 
     static async getByEmail(email){
