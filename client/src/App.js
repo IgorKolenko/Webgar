@@ -12,6 +12,12 @@ import ManageStari from './components/manageStari/manageStari';
 import PogledZadatkaProfesor from './components/pogledZadatkaProfesor/pogledZadatkaProfesor';
 import PogledRezultata from './components/pogledRezultata/pogledRezultata';
 import Register from './components/register/register';
+import Navbar from './components/navbar/navbar';
+import $ from 'jquery';
+import Popper from 'popper.js';
+import 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap/dist/js/bootstrap.js';
 import {
   BrowserRouter as Router,
   Switch,
@@ -57,6 +63,7 @@ class App extends React.Component {
       return (
         <Router>
           <div className="App">
+            {this.state.loggedIn ? <Navbar /> : <div></div>}
             <Switch>
               <Route exact path="/">
                 {this.state.loggedIn == false ? <Login /> : this.state.role == "profesor" ? <Redirect to="/manageAktivni" /> : <Redirect to="/aktivniZadaci" />}
@@ -93,6 +100,8 @@ class App extends React.Component {
               </Route>
             </Switch>
           </div>
+          <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" ></script>
+          <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>
         </Router>
       );
     }else{

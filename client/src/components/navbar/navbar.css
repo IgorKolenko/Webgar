@@ -1,0 +1,27 @@
+nav{
+    background-color: white;
+}
+
+nav a{
+    font-family: 'PT Sans', sans-serif;
+    color: #FFB344 !important;
+    font-size: 24px;
+}
+
+nav a:hover{
+    color: #ff9700 !important;
+}
+
+nav .navbar-toggler{
+    color: #FFB344;
+    font-size: 24px;
+    text-decoration: none !important;
+    outline: none !important;
+    border: none !important;
+}
+
+nav .navbar-toggler:active{
+    text-decoration: none !important;
+    outline: none !important;
+    border: none !important;
+}

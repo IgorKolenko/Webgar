@@ -1,7 +1,25 @@
 h1{
-    font-family: Arial, Helvetica, sans-serif;
-    color: blue;
-    font-size: 24px;
+    text-align: center;
+    font-size: 36px;
+    color: red;
+}
+
+h2{
+    margin: 20em;
+    color: red;
+    padding: 10em;
+    background-color: yellow;
+}
+
+.customDiv{
+    padding: 10em;
+    width: 50px;
+    background-color: red;
+}
+
+.customDiv p{
+    color: yellow;
+    font-size: large;
 }
 
 .testClass{
