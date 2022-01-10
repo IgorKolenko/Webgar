@@ -9,27 +9,34 @@ const {
     validationResult
 } = require('express-validator');
 
+var loginMsg = "";
+var registerMsg = "";
+
 router.post('/login', [
     body('email').not().isEmpty().isEmail(),
-    body('password').not().isEmpty().isLength({
-        min: 5
-    })]
+    body('password').not().isEmpty()]
     ,async function(req,res,next){
     const errors=validationResult(req)
     if(!errors.isEmpty()){
         console.log(errors)
+        loginMsg = errors.errors[0].param + ": "+errors.errors[0].msg;
         res.sendStatus(500)
     }else{
         var email=req.body.email
         var password=req.body.password
 
         let user=await User.getByEmail(email)
+        if(user == undefined){
+            loginMsg = "email: Invalid value";
+            res.sendStatus(401)
+        }
         let validPassword= await bcrypt.compare(password,user.password)
         if(validPassword){
             console.log(user)
             req.session.user=user
             res.sendStatus(200)
         }else{
+            loginMsg = "password: Invalid value";
             res.sendStatus(401)
         }
 
@@ -45,6 +52,7 @@ router.post('/register',[
 ],async function (req,res,next){
     const errors=validationResult(req)
     if(!errors.isEmpty()){
+        registerMsg = errors.errors[0].param + ": "+errors.errors[0].msg;
         console.log(errors)
         res.sendStatus(500)
     }else{
@@ -62,7 +70,9 @@ router.post('/register',[
 });
 
 router.post('/logout',async function (req,res,next){
+    console.log("Logging out");
     try {
+        console.log("Destroying session");
         req.session.destroy()
         res.sendStatus(200)
     }catch {
@@ -77,6 +87,18 @@ router.get('/logged-in', function(req, res, next){
     }else{
         res.json({loggedIn: false, role: ""});
     }
+})
+
+router.get('/login-msg', function(req, res, next){
+    let msg = loginMsg;
+    loginMsg = "";
+    res.json({msg: msg});
+})
+
+router.get('/register-msg', function(req, res, next){
+    let msg = registerMsg;
+    registerMsg = "";
+    res.json({msg: msg});
 })
 
 

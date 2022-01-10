@@ -21,6 +21,17 @@ class Navbar extends React.Component{
         this.toggleMenu = this.toggleMenu.bind(this);
         this.toggleDropdown = this.toggleDropdown.bind(this);
         this.checkLoginStatus = this.checkLoginStatus.bind(this);
+        this.LogoutUser = this.LogoutUser.bind(this);
+    }
+
+    LogoutUser(){
+        console.log("Logging user out");
+        fetch('/auth/logout', {
+            method: "POST",
+            credentials: 'include',
+            headers: {'Content-Type': 'application/json'}
+        });
+        window.location.reload(true);
     }
 
     toggleMenu(){
@@ -84,14 +95,14 @@ class Navbar extends React.Component{
                                 <a className='nav-link' href='/manageAktivni'>Aktivni zadaci</a>
                             </li>
                             <li className='nav-item'>
-                                <a className='nav-link' href='#'>Odjava</a>
+                                <a className='nav-link' onClick={this.LogoutUser} href='#'>Odjava</a>
                             </li>
                         </ul>
                     </div> : 
                     <div className={'collapse navbar-collapse '+show}>
                         <ul className='navbar-nav ms-auto'>
                             <li className='nav-item'>
-                                <a className='nav-link' href='#'>Odjava</a>
+                                <a className='nav-link' onClick={this.LogoutUser} href='#'>Odjava</a>
                             </li>
                         </ul>
                     </div>}

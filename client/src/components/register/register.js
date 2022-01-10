@@ -11,6 +11,7 @@ class Register extends React.Component{
             ime: "",
             prezime: "",
             confirmPass: "",
+            jmbag: "",
             errorMsg: ""
         }
         this.onEmailChange = this.onEmailChange.bind(this);
@@ -18,7 +19,26 @@ class Register extends React.Component{
         this.onImeChange = this.onImeChange.bind(this);
         this.onPrezimeChange = this.onPrezimeChange.bind(this);
         this.onConfirmPassChange = this.onConfirmPassChange.bind(this);
-        this.sendLogin = this.sendLogin.bind(this);
+        this.onJmbagChange = this.onJmbagChange.bind(this);
+        this.sendRegister = this.sendRegister.bind(this);
+    }
+
+    componentDidMount(){
+        fetch('/auth/register-msg', {
+            method: "GET",
+            credentials: 'include',
+            headers: {'Content-Type': 'application/json'}
+        }).then(res => res.json()).then(res => {
+            this.setState({
+                errorMsg: res.msg
+            });
+        });
+    }
+
+    onJmbagChange(t){
+        this.setState({
+            jmbag: t.target.value
+        })
     }
 
     onEmailChange(t){
@@ -51,21 +71,30 @@ class Register extends React.Component{
         })
     }
 
-    sendLogin(){
-        if(this.state.password == this.state.confirmPass){
-            fetch('/auth/login', {
-                method: "POST",
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    email: this.state.email,
-                    password: this.state.password
+    sendRegister(){
+        if(this.state.jmbag.length == 10){
+            if(this.state.password == this.state.confirmPass){
+                fetch('/auth/register', {
+                    method: "POST",
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        email: this.state.email,
+                        password: this.state.password,
+                        firstName: this.state.ime,
+                        lastName: this.state.prezime,
+                        jmbag: this.state.jmbag
+                    })
                 })
-            })
-            window.location.reload(true);
+                window.location.reload(true);
+            }else{
+                this.setState({
+                    errorMsg: "Lozinke nisu iste"
+                });
+            }
         }else{
             this.setState({
-                errorMsg: "Lozinke nisu iste"
-            })
+                errorMsg: "JMBAG mora biti duljine 10"
+            });
         }
     }
 
@@ -75,12 +104,13 @@ class Register extends React.Component{
                 <div className='loginDiv'>
                     <h2>REGISTRACIJA</h2>
                     <p className='errorMsg'>{this.state.errorMsg}</p>
-                    <input type="text" onChange={this.onEmailChange} placeholder='Ime' required/>
-                    <input type="text" onChange={this.onEmailChange} placeholder='Prezime' required/>
+                    <input type="text" onChange={this.onImeChange} placeholder='Ime' required/>
+                    <input type="text" onChange={this.onPrezimeChange} placeholder='Prezime' required/>
                     <input type="email" onChange={this.onEmailChange} placeholder='Email adresa' required/>
+                    <input type="number" onChange={this.onJmbagChange} min="10" max="10" placeholder='JMBAG' required/>
                     <input type="password" onChange={this.onPasswordChange} placeholder='Lozinka' required/>
-                    <input type="password" onChange={this.onPasswordChange} placeholder='Potvrda Lozinke' required/>
-                    <button className='customBtn' onClick={this.sendLogin}>Registrirajte se</button>
+                    <input type="password" onChange={this.onConfirmPassChange} placeholder='Potvrda Lozinke' required/>
+                    <button className='customBtn' onClick={this.sendRegister}>Registrirajte se</button>
                 </div>
             </div>
         );
