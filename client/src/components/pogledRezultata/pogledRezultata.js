@@ -12,6 +12,7 @@ class PogledRezultata extends React.Component{
             fileName: "",
             results: []
         }
+        this.getFile = this.getFile.bind(this);
     }
 
     componentDidMount(){
@@ -29,6 +30,43 @@ class PogledRezultata extends React.Component{
             })
     }
 
+    async getFile(){
+        console.log("Skidanje datoteke");
+        const {match: {params}} = this.props;
+
+        let filename = ""
+
+        await fetch('/tasks/solutionName/'+params.solutionId, {
+            method: 'GET'
+        }).then(res => res.json()).then(res => filename = res.fileName);
+
+        console.log('/tasks/solutionCode/'+params.solutionId);
+        fetch('/tasks/solutionCode/'+params.solutionId, {
+            method: 'GET',
+        }).then((response) => response.blob())
+        .then((blob) => {
+            // Create blob link to download
+            const url = window.URL.createObjectURL(
+              new Blob([blob]),
+            );
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute(
+              'download',
+              filename,
+            );
+        
+            // Append to html link element page
+            document.body.appendChild(link);
+        
+            // Start download
+            link.click();
+        
+            // Clean up and remove the link
+            link.parentNode.removeChild(link);
+          });
+    }
+
     render(){
         console.log(this.state.results)
         let datum = (new Date(this.state.uploadDate)).toLocaleDateString()
@@ -38,7 +76,7 @@ class PogledRezultata extends React.Component{
                 <p>Datum uploada: {datum}</p>
                 <p>
                     Datoteka: {this.state.fileName}
-                    <button className='customBtn'>Preuzmite datoteku</button>
+                    <button className='customBtn' onClick={this.getFile}>Preuzmite datoteku</button>
                 </p>
                 <br />
                 <h2>Rezultati provjera</h2>

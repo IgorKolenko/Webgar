@@ -42,6 +42,11 @@ router.get('/solutionCode/:taskID',async function (req,res,next){
     res.status(200).attachment(task.filename).send(task.file)
 })
 
+router.get('/solutionName/:taskID',async function (req,res,next){
+    let task=await db.getSolution(req.params.taskID);
+    res.json({fileName: task.filename});
+})
+
 //Vraca rjesenja za zadatak sa imenima studenata
 router.get('/solutions/task/:taskID', async function(req,res,next){
     let studentSolution=await db.getAllSolutions(req.params.taskID)
